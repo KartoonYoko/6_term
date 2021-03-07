@@ -1,7 +1,0 @@
-
-ARP protocol
-https://habr.com/ru/post/80364/
-its packet structure
-https://en.wikipedia.org/wiki/Address_Resolution_Protocol#Packet_structure
-https://www.practicalnetworking.net/series/arp/gratuitous-arp/
-
