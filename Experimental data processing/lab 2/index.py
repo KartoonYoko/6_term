@@ -55,7 +55,7 @@ data = module.unbiased_estimates(arr, discrete_variation)
 # в) приближенный критерий.
 
 
-def emperical(arr, disc, aver_x, aver_dev, is_print=True):
+def emperical(arr, disc, aver_x, aver_dev, assim, ex, is_print=True):
     """
         строит эмперическую и
         теоретическую кривую распределения
@@ -63,6 +63,8 @@ def emperical(arr, disc, aver_x, aver_dev, is_print=True):
         disc - дискретный ряд
         aver_x - средняя выборочная
         aver_dev - среднее квадратичное отклонение
+        assim - ассиметрия
+        ex - эксцесс
     """
     n = len(arr)
     #   - размах варьирования признака X
@@ -80,12 +82,32 @@ def emperical(arr, disc, aver_x, aver_dev, is_print=True):
     u_arr = []      # n'i
     for key in disc:
         u_arr.append(round((n * h / aver_dev) * laplas((key - aver_x) / aver_dev)))
-    sum = 0
+    sum = 0     # x^2
     i = 0
     for key in disc:
         sum += (disc[key] - u_arr[i]) ** 2 / u_arr[i]
         i += 1
-    print(sum)
+
+    # Проверить согласованность эмпирического распределения с теоретическим нормальным, применяя три критерия:
+    # а) критерий Пирсона;
+
+    # число степеней свободы (k)
+    number_degrees_freedom = 7
+    # находим по приложению 5
+    x_kr = 2.17
+    print("x^2", sum, "; x^2кр", x_kr)
+    if x_kr < sum:
+        print("Так как x^2кр < x^2, то делаем вывод, что данные не подчиняются нормальному закону распределения")
+    # б) критерий Романовского
+    roman = abs((sum - number_degrees_freedom) / math.sqrt(2 * number_degrees_freedom))
+    print("критерий Романовского", roman)
+
+    # в) приближенный критерий.
+    sas = round(math.sqrt((6 * (n - 1)) / ((n + 1) * (n + 3))), 2)
+    sex = round(math.sqrt((24 * n * (n - 2) * (n - 3)) / ((n - 1) ** 2 * (n + 3) * (n + 5))), 2)
+    print("As", round(assim, 2), "SAs", sas)
+    print("Ex", round(ex, 2), "SEx", sex)
+
     if is_print:
         plt.title('Вариационный ряд')
         plt.xlabel('Варианты')
@@ -96,5 +118,5 @@ def emperical(arr, disc, aver_x, aver_dev, is_print=True):
         plt.show()
 
 
-emperical(arr, discrete_variation, data[0], data[1])
+emperical(arr, discrete_variation, data[0], data[1], data[2], data[3])
 

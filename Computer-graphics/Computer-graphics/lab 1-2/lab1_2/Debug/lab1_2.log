@@ -1,18 +1,18 @@
 ﻿  lab1_2.cpp
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(24,24): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(24,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(31,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(31,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(38,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(38,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(49,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(49,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(57,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(57,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(71,24): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(71,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(85,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(85,28): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(102,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(102,28): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
-  lab1_2.vcxproj -> C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Компьютерная графика\Computer-graphics\lab 1-2\lab1_2\Debug\lab1_2.exe
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(24,24): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(24,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(31,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(31,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(38,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(38,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(49,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(49,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(57,36): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(57,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(71,24): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(71,20): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(85,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(85,28): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(102,32): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\lab1_2.cpp(102,28): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+  lab1_2.vcxproj -> C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 1-2\lab1_2\Debug\lab1_2.exe
