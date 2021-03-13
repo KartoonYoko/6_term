@@ -1,165 +1,117 @@
-﻿#include <iostream>
-#include <Windows.h>
-#include <stdio.h>
+﻿#include <windows.h>
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <vector>
 
 
 using namespace std;
 
+void pushArr(vector<vector<int>>& arr, int x, int y) {
+    vector<int> sub;
+    sub.push_back(x);
+    sub.push_back(y);
+    arr.push_back(sub);
+}
+
+void printArr(HDC cnsl, vector<vector<int>> arr, int color = RGB(0, 255, 255)) {
+    for (int i = 0; i < arr.size(); i++) {
+        SetPixel(cnsl, arr[i][0], arr[i][1], color);
+    }
+}
+
 /*
 * Матрица поворота
-    M = 
+    M =
     [cosO  -sinO
      sinO  cosO]
      double aRad = 180*angle/3.1415;
      double rMx[2][2] = ((Math.Cos(aRad),-Math.Sin(aRad)),(Math.Sin(aRad),Math.Cos(aRad));
 */
-int main()
-{
-    HANDLE const hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-
-    DWORD Mode;
-    GetConsoleMode(hStdInput, &Mode);
-    SetConsoleMode(hStdInput, Mode | ENABLE_MOUSE_INPUT);
-
-    for (;;)
-    {
-        WaitForSingleObject(hStdInput, INFINITE);
-
-        INPUT_RECORD InRec;
-        DWORD NumEvents;
-        BOOL b = ReadConsoleInputW(hStdInput, &InRec, 1, &NumEvents);
-
-        if ((0 != NumEvents) && (MOUSE_EVENT == InRec.EventType))
-        {
-            DWORD const BtnState = InRec.Event.MouseEvent.dwButtonState;
-
-            if (BtnState & FROM_LEFT_1ST_BUTTON_PRESSED)
-            {
-                cout << "LEFT BUTTON" << endl;
-            }
-
-            if (BtnState & RIGHTMOST_BUTTON_PRESSED)
-            {
-                cout << "RIGHT BUTTON" << endl;
-            }
-        }
+void turn(vector<vector<int>>& arr, int angle) {
+    angle = 180 * angle / 3.1415;
+    for (int i = 0; i < arr.size(); i++) {
+        int x = arr[i][0];
+        int y = arr[i][1];
+        arr[i][0] = (x * cos(angle) - y * sin(angle));
+        arr[i][1] = (x * sin(angle) + y * cos(angle));
     }
-
-    return 0;
 }
 
-LRESULT APIENTRY MainWndProc(HWND hwndMain, UINT uMsg,
-    WPARAM wParam, LPARAM lParam)
+vector<vector<int>> ellipse2(HDC cnsl, int x, int y, int a, int b, int color = RGB(0, 255, 255))
 {
-    HDC hdc;                       // дескриптор контекста устройства
-    RECT rcClient;                 // прямоугольник клиентской области
-    POINT ptClientUL;              // верхний левый угол клиент.области
-    POINT ptClientLR;              // нижний правый угол клиент.области
-    static POINTS ptsBegin;        // начальная точка
-    static POINTS ptsEnd;          // новая конечная точка
-    static POINTS ptsPrevEnd;      // предыдущая конечная точка
-    static BOOL fPrevLine = FALSE; // флаг предыдущей линии
+    vector<vector<int>> res;
+    int col, i, row, bnew;
+    long a_square, b_square, two_a_square, two_b_square, four_a_square, four_b_square, d;
 
-    switch (uMsg)
+    b_square = b * b;
+    a_square = a * a;
+    row = b;
+    col = 0;
+    two_a_square = a_square << 1;
+    four_a_square = a_square << 2;
+    four_b_square = b_square << 2;
+    two_b_square = b_square << 1;
+    d = two_a_square * ((row - 1) * (row)) + a_square + two_b_square * (1 - a_square);
+    while (a_square * (row) > b_square * (col))
     {
-    case WM_LBUTTONDOWN:
-
-        // Захватываем мышку.
-
-        SetCapture(hwndMain);
-
-        // Получаем экранные координаты клиентской области,
-        // и преобразуем их в клиентские координаты.
-
-        GetClientRect(hwndMain, &rcClient);
-        ptClientUL.x = rcClient.left;
-        ptClientUL.y = rcClient.top;
-
-        // Добавляем один пиксель справа и снизу, так как координаты,
-        // полученные из GetClientRect не включают левого и
-        // нижнего пикселей.
-
-        ptClientLR.x = rcClient.right + 1;
-        ptClientLR.y = rcClient.bottom + 1;
-        ClientToScreen(hwndMain, &ptClientUL);
-        ClientToScreen(hwndMain, &ptClientLR);
-
-        // Копируем клиентские координаты клиентской области
-        // в структуру rcClient. Ограничиваем курсор мышки клиентской
-        // областью, передав структуру rcClient в
-        // функцию ClipCursor.
-
-        SetRect(&rcClient, ptClientUL.x, ptClientUL.y,
-            ptClientLR.x, ptClientLR.y);
-        ClipCursor(&rcClient);
-
-        // Преобразуем координаты курсора для структуры POINTS,
-        // которая определяет начальную точку рисования линии
-        // в течение сообщения WM_MOUSEMOVE.
-
-        ptsBegin = MAKEPOINTS(lParam);
-        return 0;
-
-    case WM_MOUSEMOVE:
-
-        // Чтобы рисовалась линия, то при движении мышки
-        // пользователь должен удерживать нажатой левую кнопку мышки.
-
-        if (wParam & MK_LBUTTON)
+        //SetPixel(cnsl, col + x, row + y, color);
+        //SetPixel(cnsl, col + x, y - row, color);
+        //SetPixel(cnsl, x - col, row + y, color);
+        //SetPixel(cnsl, x - col, y - row, color);
+        pushArr(res, col + x, row + y);
+        pushArr(res, col + x, y - row);
+        pushArr(res, x - col, row + y);
+        pushArr(res, x - col, y - row);
+        
+        if (d >= 0)
         {
-
-            // Получаем контекст устройства (DC) для клиентской области
-
-            hdc = GetDC(hwndMain);
-
-            // Следующая функция гарантирует, что пиксели
-            // предыдущей линии установлены в белый цвет, а
-            // вновь нарисованной линии - в чёрный.
-
-            SetROP2(hdc, R2_NOTXORPEN);
-
-            // Если линия была нарисована в предыдущем WM_MOUSEMOVE,
-            // то рисуем поверх неё. Тем самым, установив пиксели
-            // линии в белый цвет, мы сотрём её.
-
-            if (fPrevLine)
-            {
-                MoveToEx(hdc, ptsBegin.x, ptsBegin.y, (LPPOINT)NULL);
-                LineTo(hdc, ptsPrevEnd.x, ptsPrevEnd.y);
-            }
-
-            // Преобразуем текущие координаты курсора в структуру
-            // POINTS, а затем рисуем новую линию.
-
-            ptsEnd = MAKEPOINTS(lParam);
-            MoveToEx(hdc, ptsBegin.x, ptsBegin.y, (LPPOINT)NULL);
-            LineTo(hdc, ptsEnd.x, ptsEnd.y);
-
-            // Устанавливаем флаг предыдущей линии, сохраняем конечную
-            // точку новой линии, а затем освобождаем DC.
-
-            fPrevLine = TRUE;
-            ptsPrevEnd = ptsEnd;
-            ReleaseDC(hwndMain, hdc);
+            row--;
+            d -= four_a_square * (row);
         }
-        break;
-
-    case WM_LBUTTONUP:
-
-        // Пользователь закончил рисовать линию. Сбрасываем флаг
-        // предыдущей линии, освобождаем курсор мышки и
-        // освобождаем захват мышки.
-
-        fPrevLine = FALSE;
-        ClipCursor(NULL);
-        ReleaseCapture();
-        return 0;
-
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-
-        // Обрабатываем другие сообщения.
-
+        d += two_b_square * (3 + (col << 1));
+        col++;
     }
+    d = two_b_square * (col + 1) * col + two_a_square * (row * (row - 2) + 1) + (1 - two_a_square) * b_square;
+    while ((row)+1)
+    {
+        //SetPixel(cnsl, col + x, row + y, color);
+        //SetPixel(cnsl, col + x, y - row, color);
+        //SetPixel(cnsl, x - col, row + y, color);
+        //SetPixel(cnsl, x - col, y - row, color);
+        pushArr(res, col + x, row + y);
+        pushArr(res, col + x, y - row);
+        pushArr(res, x - col, row + y);
+        pushArr(res, x - col, y - row);
+
+        if (d <= 0)
+        {
+            col++;
+            d += four_b_square * col;
+        }
+        row--;
+        d += two_a_square * (3 - (row << 1));
+    }
+
+    return res;
+}
+
+
+int main()
+{
+    HWND consoleWindow = GetConsoleWindow();
+    HDC consoleDC = GetDC(consoleWindow);
+    system("cls");
+
+    vector<vector<int>> arr = ellipse2(consoleDC, 400, 300, 50, 100, RGB(0, 255, 255));
+
+    //printArr(consoleDC, arr);
+    //turn(arr, 0);
+    //printArr(consoleDC, arr);
+    while (true) {
+        turn(arr, 90);
+        printArr(consoleDC, arr);
+        Sleep(500);
+    }
+
 }
