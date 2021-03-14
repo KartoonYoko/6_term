@@ -33,8 +33,8 @@ void turn(vector<vector<int>>& arr, int angle) {
     for (int i = 0; i < arr.size(); i++) {
         int x = arr[i][0];
         int y = arr[i][1];
-        arr[i][0] = (x * cos(angle) - y * sin(angle));
-        arr[i][1] = (x * sin(angle) + y * cos(angle));
+        arr[i][0] = round(x * cos(angle) - y * sin(angle));
+        arr[i][1] = round(x * sin(angle) + y * cos(angle));
     }
 }
 
@@ -99,19 +99,25 @@ vector<vector<int>> ellipse2(HDC cnsl, int x, int y, int a, int b, int color = R
 
 int main()
 {
+    int cxSize = 1000;
+    int cySize = 1000;
     HWND consoleWindow = GetConsoleWindow();
+    SetWindowPos(consoleWindow, HWND_TOP, 0, 0, cxSize, cySize, NULL);
+
     HDC consoleDC = GetDC(consoleWindow);
+    // установка режима и начала координат
+    SetMapMode(consoleDC, MM_LOMETRIC);
+    SetViewportOrgEx(consoleDC, cxSize / 2, cySize / 2, NULL);
     system("cls");
 
-    vector<vector<int>> arr = ellipse2(consoleDC, 400, 300, 50, 100, RGB(0, 255, 255));
+    vector<vector<int>> arr = ellipse2(consoleDC, 0, 0, 300, 600, RGB(0, 255, 255));
 
-    //printArr(consoleDC, arr);
-    //turn(arr, 0);
-    //printArr(consoleDC, arr);
+
     while (true) {
-        turn(arr, 90);
+        system("cls");
+        turn(arr, 1);
         printArr(consoleDC, arr);
-        Sleep(500);
+        Sleep(5);
     }
 
 }
