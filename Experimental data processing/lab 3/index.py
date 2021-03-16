@@ -38,17 +38,19 @@ for i in range(len(x_arr)):
     s2y += (y_arr[i] - y_average) ** 2
 s2x /= len(x_arr) - 1
 s2y /= len(y_arr) - 1
+sx = math.sqrt(s2x)
+sy = math.sqrt(s2y)
 
 # расчет xy- r
 xy_average = 0
 for i in range(len(x_arr)):
     xy_average += x_arr[i] * y_arr[i]
 xy_average /= len(x_arr)
-r = (xy_average - x_average * y_average) / (s2x * s2y)      # коэф линейной корреляции
+r = (xy_average - x_average * y_average) / (sx * sy)      # коэф линейной корреляции
 
 # проверяем значимость коэф корреляции
-# tp = (math.fabs(r) * math.sqrt(len(x_arr) - 2)) / math.sqrt(1 - r ** 2)       # TODO r больше 1 => вычислить tp нельзя
-# print("tp = ", tp , "t = 2.31")
+tp = round((math.fabs(r) * math.sqrt(len(x_arr) - 2)) / math.sqrt(1 - r ** 2), 2)
+print("tp = ", tp , "t = 2.31")
 
 plt.plot(x_arr, y_arr, 'ro', color="gray")
 plt.xlabel('X')

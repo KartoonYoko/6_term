@@ -1,17 +1,29 @@
 ﻿  ConsoleApplication1.cpp
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(18,23): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(32,25): warning C4244: =: преобразование "double" в "int", возможна потеря данных
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(33,23): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(36,26): warning C4244: =: преобразование "double" в "_Ty", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(23,23): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(37,25): warning C4244: =: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(38,23): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(41,26): warning C4244: =: преобразование "double" в "_Ty", возможна потеря данных
           with
           [
               _Ty=int
           ]
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(37,26): warning C4244: =: преобразование "double" в "_Ty", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(42,26): warning C4244: =: преобразование "double" в "_Ty", возможна потеря данных
           with
           [
               _Ty=int
           ]
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(44,14): warning C4101: i: неиспользованная локальная переменная
-C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(44,22): warning C4101: bnew: неиспользованная локальная переменная
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(49,14): warning C4101: i: неиспользованная локальная переменная
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(49,22): warning C4101: bnew: неиспользованная локальная переменная
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(112,22): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(112,18): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(119,34): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(119,30): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(126,34): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(126,30): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(137,34): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(137,30): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(145,34): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(145,30): warning C4244: аргумент: преобразование "double" в "int", возможна потеря данных
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(188,23): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\ConsoleApplication1.cpp(189,27): warning C4018: <: несоответствие типов со знаком и без знака
   ConsoleApplication1.vcxproj -> C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab5\ConsoleApplication1\Debug\ConsoleApplication1.exe
