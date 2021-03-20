@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "bycontract": "^2.0.10",
+    "jshint": "^2.12.0"
+  }
+}
