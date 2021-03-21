@@ -1,0 +1,30 @@
+
+html{
+    margin: 0px;
+    padding: 0px;
+
+    background-color: rgb(109, 169, 221);
+}
+
+body{
+    margin: 0px;
+    padding: 0px;
+}
+
+.canvas{
+    display: grid;
+    grid-template-columns: repeat(30, 20px);
+    grid-auto-rows: 20px;
+
+    width: 600px;
+    height: 600px;
+
+    image-rendering: pixelated;
+    image-rendering: optimizespeed;
+    background-color: rgb(102, 109, 104);
+}
+
+
+.btn{
+    margin-top: 20px;
+}

@@ -1,0 +1,30 @@
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.exe.config
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.exe
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.pdb
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csprojAssemblyReference.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.Form1.resources
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.Properties.Resources.resources
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csproj.GenerateResource.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csproj.CoreCompileInputs.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.exe
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.pdb
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.exe.config
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.exe
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.pdb
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csprojAssemblyReference.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.Form1.resources
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.Properties.Resources.resources
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csproj.GenerateResource.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csproj.CoreCompileInputs.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.exe
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.pdb
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.exe.config
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.exe
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\bin\Debug\CompGraph_Palitra.pdb
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csprojAssemblyReference.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.Form1.resources
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.Properties.Resources.resources
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csproj.GenerateResource.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.csproj.CoreCompileInputs.cache
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.exe
+F:\VS2017_Projects\2017ENTERPRISE\CompGraph_Palitra — копия — копия\CompGraph_Palitra\obj\Debug\CompGraph_Palitra.pdb
