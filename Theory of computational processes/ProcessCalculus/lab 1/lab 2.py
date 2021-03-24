@@ -4,7 +4,9 @@
 # а большее - их удвоенным произведением.
 
 def user_input(x, y):
-    """ """
+    """
+        ввод двух чисел
+    """
     input_user = True
     while input_user:
         x = float(input('> Введите Х: '))
@@ -17,12 +19,16 @@ def user_input(x, y):
 
 
 def half_sum(x, y):
-    """ """
+    """
+        воловина суммы
+    """
     return (x + y) / 2
 
 
 def double_mult(x, y):
-    """ """
+    """
+        удвоенное умножение
+    """
     return 2 * (x * y)
 
 
@@ -30,7 +36,7 @@ x = 0
 y = 0
 x, y = user_input(x, y)
 
-if (x > y):
+if x > y:
     first = x
     second = y
     x = double_mult(first, second)

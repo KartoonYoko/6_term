@@ -5,6 +5,7 @@ from random import random
 
 # создать случайную матрицу numpy array
 arr = np.array(np.random.randint(1, 10, (5, 5)))    # создание матрицы 5x5 из случайных чисел от 1 до 10
+print("Случайная матрица: ")
 print(arr)
 
 # решить СЛАУ (numpy)
@@ -13,14 +14,19 @@ print(arr)
 M1 = np.array([[2., 5.], [1., -10.]])  # Матрица (левая часть системы)
 v1 = np.array([1., 3.])  # Вектор (правая часть системы)
 
+print("Решение СЛАУ: ")
 print(np.linalg.solve(M1, v1))
 
 # построить тепловую карту на основе матрицы
 seaborn.heatmap(arr, annot=True, cmap='coolwarm')
 plt.show()
 
+
 # построить гистограмму для всех значений в матрице (seaborn)
-seaborn.displot(arr)
+l = []
+for i in range(len(arr)):
+    l.extend(arr[i])
+seaborn.displot(l)
 plt.show()
 
 # построить график любой сложной функции.
@@ -33,7 +39,7 @@ for i in range(n):     # функция y = 4 + cos(x ** 2)
 plt.plot(y, label="y = cos(x^2) + 4")
 plt.xlabel('ось x')
 plt.ylabel('ось y')
-plt.title('Заголовок')
+plt.title('График')
 plt.grid()      # включение отображение сетки
 plt.legend()
 plt.show()
@@ -47,6 +53,6 @@ for i in range(len(y)):
 plt.plot(y)
 plt.xlabel('ось x')
 plt.ylabel('ось y')
-plt.title('Заголовок')
+plt.title('График с шумом')
 plt.grid(True)
 plt.show()
