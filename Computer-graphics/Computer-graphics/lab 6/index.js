@@ -25,7 +25,7 @@ function init(){
 
   }
 
-function nextFrame(ctx, canvas, cube, cen6terScreen){
+function nextFrame(ctx, canvas, cube, centerScreen){
     ctx.fillStyle = 'rgba(0, 0, 0, 1)';  
     ctx.fillRect(0, 0, canvas.width, canvas.height);  // clear canvas
     const btnX = document.querySelector('.checkbox1');
