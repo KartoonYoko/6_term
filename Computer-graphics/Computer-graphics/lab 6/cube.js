@@ -48,6 +48,16 @@ class Cube{
         arr[7].setPoint(x1 + length, y1);
     }
 
+    turnX(){
 
+    }
+
+    /**
+     * 
+     * @param {context} ctx - context of canvas 
+     */
+    draw(ctx){
+
+    }
 
 }
