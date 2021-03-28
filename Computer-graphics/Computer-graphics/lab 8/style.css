@@ -17,22 +17,13 @@ body{
 }
 
 .canvas{
-    /* display: grid;
-    grid-template-columns: repeat(30, 20px);
-    grid-auto-rows: 20px;
-
-    width: 900px;
-    height: 600px;
-
-    image-rendering: pixelated;
-    image-rendering: optimizespeed;
-    background-color: rgb(102, 109, 104); */
     width: 1000px;
     height: 600px;
     border: 0px solid black;
     image-rendering: pixelated;
     image-rendering: optimizespeed;
     background-color: rgb(102, 109, 104);
+
 }
 
 
