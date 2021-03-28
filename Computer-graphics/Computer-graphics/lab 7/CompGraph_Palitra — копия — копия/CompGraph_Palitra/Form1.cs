@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+// cmyk from 0 to 100
+// rgb from 0 to 255
+// hsv 239 240 240
 namespace CompGraph_Palitra
 {
     public partial class Form1 : Form

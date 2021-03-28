@@ -163,6 +163,14 @@ class Poly{
 }
 
 class Cube{
+
+    /**
+     * 
+     * @param {*} ctx 
+     * @param {*} size - размер куба
+     * @param {*} fillColor - цвет полигонов
+     * @param {*} edgeColor - цвет краёв
+     */
     constructor(ctx, size, fillColor, edgeColor){
         this.ctx = ctx;
 
