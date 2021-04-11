@@ -17,6 +17,10 @@ class Point2D{
     }
 }
 
+/**
+ * 
+ * @returns {array} array of Point2D's
+ */
 function getData(){
     let point1X = document.getElementById('point1x');
     let point2X = document.getElementById('point2x');
@@ -35,6 +39,7 @@ function getData(){
 }
 
 /**
+ * Рисует треугольник
  * 
  * @param {*} ctx 
  * @param {Point2D} p1 
@@ -49,6 +54,38 @@ function drawTriangle(ctx, p1, p2, p3, color = 'rgb(0, 250, 250)'){
     ctx.moveTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y);
     ctx.lineTo(p3.x, p3.y);
+    ctx.lineTo(p1.x, p1.y);
+
+    // ctx.moveTo(p1.x + 1, p1.y);
+    // ctx.lineTo(p2.x + 1, p2.y);
+    // ctx.lineTo(p3.x + 1, p3.y);
+    // ctx.lineTo(p1.x + 1, p1.y);
+
+    // ctx.moveTo(p1.x + 2, p1.y);
+    // ctx.lineTo(p2.x + 2, p2.y);
+    // ctx.lineTo(p3.x + 2, p3.y);
+    // ctx.lineTo(p1.x + 2, p1.y);
+    ctx.stroke();
+}
+
+/**
+ * Рисует квадрат
+ * 
+ * @param {*} ctx 
+ * @param {Point2D} p1 
+ * @param {Point2D} p2 
+ * @param {Point2D} p3 
+ * @param {Point2D} p4 
+ * @param {String} color 
+ */
+function drawSquare(ctx, p1, p2, p3, p4, color = 'rgb(0, 250, 250)'){
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.lineTo(p3.x, p3.y);
+    ctx.lineTo(p4.x, p4.y);
     ctx.lineTo(p1.x, p1.y);
     ctx.stroke();
 }
@@ -92,6 +129,7 @@ function paintOver(ctx, p1, p2, p3, color = 'rgb(0, 250, 250)'){
 }
 
 /**
+ * Закрасить пиксель
  * 
  * @param {*} ctx 
  * @param {Point2D} p 
@@ -104,19 +142,122 @@ function setPixel(ctx, p, color = 'rgb(0, 250, 250)'){
 
 /**
  * Проверяет равен ли цвет пикселя color
+ * 
  * @param {*} ctx 
- * @param {*} p 
- * @param {*} color 
+ * @param {Point2D} p 
+ * @param {Array} color 
  */
 function checkPixelColor(ctx, p, color){
     let imageData = ctx.getImageData(p.x, p.y, 1, 1).data;
     let pixelColor = 'rgb(' + imageData[0] + ', ' + imageData[1] + ', ' + imageData[2] + ', ' + imageData[3] + ')';
-
-    if (color == pixelColor){
-        return true;
+    
+    if (Array.isArray(color)){
+        let res = false;
+        color.forEach(element => {
+            if (element == pixelColor) { 
+                res = true;  
+            }
+        });
+        return res;
     }
     else{
-        return false;
+
+        if (color == pixelColor){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+}
+
+/**
+ * Получить цвет пикселя
+ * 
+ * @param {*} ctx 
+ * @param {Point2D} p 
+ * @returns {string} color
+ */
+function getColorOfPixel(ctx, p){
+    let imageData = ctx.getImageData(p.x, p.y, 1, 1).data;
+    let pixelColor = 'rgb(' + imageData[0] + ', ' + imageData[1] + ', ' + imageData[2] + ', ' + imageData[3] + ')';
+    return pixelColor;
+}
+
+class Stack{
+
+    constructor(){
+        this.stack = new Set();
+    }
+
+    /**
+     * 
+     * @param {Point2D} p 
+     */
+    push(p){
+        let s = 'x:' + p.x + 'y:' + p.y;
+        this.stack.add(s);
+    }
+
+    /**
+     * 
+     * @returns {Point2D} любая точка из стека
+     */
+    pop(){
+        let point = '';
+        for (let item of this.stack) {
+            point = item;
+            break;
+        }
+        this.stack.delete(point);
+
+        let x = point.indexOf('x:') + 2;
+        let y = point.indexOf('y:');
+        let end = point.length;
+        let first = parseInt(point.slice(x, y));
+        let second = parseInt(point.slice(y + 2, end));
+        return new Point2D(first, second);
+    }
+
+    size(){
+        return this.stack.size;
+    }
+}
+
+
+/**
+ * 
+ * @param {*} ctx 
+ * @param {Point2D} p 
+ * @param {Array} paintColor
+ */
+ function zatravka4(ctx, p, paintColor){
+    let stack = new Stack();
+    
+    let pixel;
+    let point = null;
+
+    stack.push(p);
+    while((stack.size() != 0) && (stack.size() <= 500)){
+        pixel = stack.pop();
+        
+        if (!checkPixelColor(ctx, pixel, paintColor)){
+            
+            setPixel(ctx, pixel, paintColor[0]);
+            console.log(stack.size());
+            point = new Point2D(pixel.x + 1, pixel.y);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+            
+            point = new Point2D(pixel.x - 1, pixel.y);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+
+            point = new Point2D(pixel.x, pixel.y + 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+
+            point = new Point2D(pixel.x, pixel.y - 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+           
+        }
     }
 }
 
@@ -124,56 +265,55 @@ function checkPixelColor(ctx, p, color){
  * 
  * @param {*} ctx 
  * @param {Point2D} p 
- * @param {} paintColor
+ * @param {Array} paintColor
  */
-function zatravka(ctx, p, paintColor){
-    let stack = [];
+ function zatravka8(ctx, p, paintColor){
+    let stack = new Stack();
     
     let pixel;
     let point = null;
-    let last = null;
+
     stack.push(p);
-    while(stack.length != 0){
-        if(last){ // если рядом с последним пикселем был незакрашенный
-            pixel = last;
-        }
-        else{
-            pixel = stack.pop();
-        }
-
+    while((stack.size() != 0) && (stack.size() <= 500)){
+        pixel = stack.pop();
+        
         if (!checkPixelColor(ctx, pixel, paintColor)){
-            setPixel(ctx, pixel, paintColor);
-
-            last = null;
-            point = new Point2D(pixel.x - 1, pixel.y);
-            if (!checkPixelColor(ctx, point, paintColor)){
-                stack.push(point);
-                last = point;
-            }
+            
+            setPixel(ctx, pixel, paintColor[0]);
+            console.log(stack.size());
             point = new Point2D(pixel.x + 1, pixel.y);
-            if (!checkPixelColor(ctx, point, paintColor)){
-                stack.push(point);
-                last = point;
-            }
-            point = new Point2D(pixel.x, pixel.y - 1);
-            if (!checkPixelColor(ctx, point, paintColor)){
-                stack.push(point);
-                last = point;
-            }
-            point = new Point2D(pixel.x, pixel.y + 1);
-            if (!checkPixelColor(ctx, point, paintColor)){
-                stack.push(point);
-                last = point;
-            }
-        }
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+            
+            point = new Point2D(pixel.x - 1, pixel.y);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
 
+            point = new Point2D(pixel.x, pixel.y + 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+
+            point = new Point2D(pixel.x, pixel.y - 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+
+            point = new Point2D(pixel.x + 1, pixel.y + 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+            
+            point = new Point2D(pixel.x + 1, pixel.y - 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+
+            point = new Point2D(pixel.x - 1, pixel.y + 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+
+            point = new Point2D(pixel.x - 1, pixel.y - 1);
+            if (!checkPixelColor(ctx, point, paintColor)) stack.push(point);
+           
+        }
     }
 }
 
-const CANVAS_COLOR = 'rgb(102, 109, 104)';
+const CANVAS_COLOR = 'rgb(255, 255, 255)';
 
 const canvas = document.querySelector('.canvas');
 const ctx = canvas.getContext('2d');
+let colors = [];
 
 const btnStart = document.querySelector('.btn');
 btnStart.addEventListener('click', () => {
@@ -182,16 +322,45 @@ btnStart.addEventListener('click', () => {
     ctx.fillStyle = CANVAS_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height); // clear canvas
 
-    drawTriangle(ctx, ...arr);
+    colors = [];
+
+    // drawTriangle(ctx, ...arr);
+    // colors.push(getColorOfPixel(ctx, arr[0]));
+    // colors.push(getColorOfPixel(ctx, new Point2D(99, 39)));
+    // colors.push(getColorOfPixel(ctx, new Point2D(100, 39)));
+    // colors.push(getColorOfPixel(ctx, new Point2D(100, 41)));
+    // colors.push(getColorOfPixel(ctx, new Point2D(99, 40)));
+    // colors.push(getColorOfPixel(ctx, new Point2D(101, 40)));
+    // colors.push('rgb(0, 250, 250)');
+
+    drawSquare(
+        ctx, 
+        new Point2D(1, 1),
+        new Point2D(100, 1),
+        new Point2D(100, 100),
+        new Point2D(1, 100)
+    );
+    colors.push(getColorOfPixel(ctx, new Point2D(1, 1)));
+    colors.push(getColorOfPixel(ctx, new Point2D(50, 100)));
+    colors.push('rgb(0, 250, 250)');
     
 });
 
 const btnPaint = document.querySelector('.btn-paint');
 btnPaint.addEventListener('click', () => {
     let arr = getData();
-    paintOver(ctx, ...arr);
+    // paintOver(ctx, ...arr);
 
-    zatravka(ctx, new Point2D(300, 10), CANVAS_COLOR);
+    zatravka4(ctx, new Point2D(50, 40), colors);
+    // setPixel(ctx, new Point2D(50, 40));
 });
+
+
+
+
+
+
+
+
 
 
