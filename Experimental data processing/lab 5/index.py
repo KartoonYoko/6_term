@@ -42,6 +42,7 @@ res = numpy.linalg.solve(M1, v1)
 
 def func_reg(x, a):
     """
+    Уравнение регрессии
     Функция y^_x = a0 + a1 * x^2 + a3 * x^3
     """
     return a[0] + a[1] * x + a[2] * x ** 2
@@ -141,7 +142,7 @@ def check_logarithmic(func, kef, x, pr=0.05):
     left = func(math.sqrt(x[0] * x[len(x) - 1]), kef)
     right = (func(x[0], kef) + func(x[len(x) - 1], kef)) / 2
     dif = math.fabs(left - right)
-    print(left, right, dif)
+    # print(left, right, dif)
     if (left * pr >= dif) and (right * pr >= dif):
         return True
     else:
@@ -154,3 +155,33 @@ print(check_hyperbolic2(func_reg, res, x_arr))
 print(check_power(func_reg, res, x_arr))
 print(check_exponential(func_reg, res, x_arr))
 print(check_hyperbolic1(func_reg, res, x_arr))
+
+
+# func_reg(key, res)
+
+yi_yxi_2_arr = []
+yi_y_aver_2_arr = []
+
+y_average = sum(y_arr) / len (y_arr)
+
+for i in range(len(y_arr)):
+    yi_yxi_2_arr.append((y_arr[i] - func_reg(x_arr[i], res)) ** 2)
+    yi_y_aver_2_arr.append((y_arr[i] - y_average) ** 2)
+S2xy = sum(yi_yxi_2_arr) / (len(yi_yxi_2_arr) - 1)
+S2y = sum(yi_y_aver_2_arr) / (len(yi_yxi_2_arr) - 1)
+
+i = math.sqrt(1 - S2xy / S2y)
+Fh = i ** 2 * (len(y_arr) - 2) / (1 - i ** 2)
+print("Уравнение регрессии", res[0], "+", res[1] ,"* x + ", res[2], "* x ** 2")
+print("S2xy: ", S2xy)
+print("S2y: ", S2y)
+print("i: ", i)
+print("Fh: ", Fh)
+print("Ft = 5.32")
+print("Fh > Ft")
+
+
+    
+    
+    
+
