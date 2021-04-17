@@ -17,8 +17,8 @@ body{
 }
 
 .canvas{
-    width: 1000px;
-    height: 1000px;
+    width: 500px;
+    height: 500px;
     border: 0px solid black;
     image-rendering: pixelated;
     image-rendering: optimizespeed;
@@ -29,4 +29,15 @@ body{
 .btn{
     margin-top: 20px;
     width: 200px;
+}
+
+#myProgress {
+    width: 500px;
+    background-color: grey;
+}
+  
+#myBar {
+  width: 1%;
+  height: 30px;
+  background-color: green;
 }
