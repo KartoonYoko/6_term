@@ -70,4 +70,4 @@ def conditional_value(t, y_arr, x_arr, nx, is_print=True):
 
 correlation_field(t, x_arr, y_arr, False)
 
-conditional_value(t, x_arr, y_arr, nx)
+conditional_value(t, x_arr, y_arr, nx, False)

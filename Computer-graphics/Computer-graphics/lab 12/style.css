@@ -1,0 +1,42 @@
+
+html{
+    margin: 0px;
+    padding: 0px;
+
+    background-color: rgb(109, 169, 221);
+}
+
+body{
+    margin: 0px;
+    padding: 0px;
+}
+
+.canvas{
+    /* width: 1500px;
+    height: 800px; */
+    border: 0px solid black;
+    image-rendering: pixelated;
+    image-rendering: optimizespeed;
+    background-color: rgb(255, 255, 255);
+
+}
+.canvas1{
+    display: none;
+}
+.canvas2{
+    display: none;
+}
+.btn{
+    margin-top: 20px;
+    width: 200px;
+}
+
+#photo1{
+    display: none;
+    visibility: hidden;
+}
+
+#photo2{
+    display: none;
+    visibility: hidden;
+}

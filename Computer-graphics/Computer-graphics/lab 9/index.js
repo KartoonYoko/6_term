@@ -262,6 +262,7 @@ canvas.height = 500;
 const ctx = canvas.getContext('2d');
 let colors = [];
 
+// сделать ctrl + left click для заливки
 window.addEventListener('click', function (e) {
     if (e.ctrlKey){
         colors = [];
