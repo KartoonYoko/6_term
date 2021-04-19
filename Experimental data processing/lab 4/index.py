@@ -71,3 +71,101 @@ def conditional_value(t, y_arr, x_arr, nx, is_print=True):
 correlation_field(t, x_arr, y_arr, False)
 
 conditional_value(t, x_arr, y_arr, nx, False)
+
+# Найдем уравнение регрессии
+# для этого найдем величины, входящие в это уравнение
+max_t = t[0][0]
+kef_x = 0
+kef_y = 0
+for i in range(len(t)):
+    for j in range(len(t[0])):
+        if max_t < t[i][j]:
+            max_t = t[i][j]
+            kef_y = j
+            kef_x = i
+C1 = x_arr[kef_x]   # MoX
+C2 = y_arr[kef_y]   # MoY
+h1 = x_arr[1] - x_arr[0]    # h1 - шаг X
+h2 = y_arr[1] - y_arr[0]    # h2 - шаг Y
+
+u_arr = []
+v_arr = []
+for i in range(len(x_arr)):
+    u_arr.append((x_arr[i] - C1) / h1)
+    v_arr.append((y_arr[i] - C2) / h2)
+
+# u средняя
+u_average = 0
+for i in range(len(x_arr)):
+    u_average += nx[i] * x_arr[i]
+u_average /= n
+
+# v средняя
+v_average = 0
+for i in range(len(y_arr)):
+    v_average += ny[i] * y_arr[i]
+v_average /= n
+
+# u^2 средняя
+u_average_2 = 0
+for i in range(len(x_arr)):
+    u_average_2 += nx[i] * x_arr[i] ** 2
+u_average_2 /= n
+
+# v^2 средняя
+v_average_2 = 0
+for i in range(len(y_arr)):
+    v_average_2 += ny[i] * y_arr[i] ** 2
+v_average_2 /= n
+
+# Su
+Su = math.sqrt(u_average_2 - u_average ** 2)
+
+# Sv
+Sv = math.sqrt(v_average_2 - v_average ** 2)
+
+# таблицы для нахождения summ(Nuv * UV)
+t2_uv = [
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+]
+for i in range(len(t2_uv)):
+    for j in range(len(u_arr)):
+        t2_uv[i].append(u_arr[i] * v_arr[j])
+
+t2_nuv = [
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+]
+for i in range(len(t2_nuv)):
+    for j in range(len(u_arr)):
+        if t2_uv[i][j] != 0:
+            t2_nuv[i].append(t[i][j])
+        else:
+            t2_nuv[i].append(None)
+
+# Nv
+count = 0
+for i in range(len(t2_nuv)):
+    for j in range(len(u_arr)):
+        if t2_nuv[i][j] != None:
+            count += t2_nuv[i][j] * t2_uv[i][j]
+
+n_nv = count
+# коэф корреляции TODO неверно считает
+r = (n_nv - n * u_average * v_average) / (n * Su * Sv)
+print(n_nv)
+print(u_average)
+print(v_average)
+print(Sv)
+print(Su)
+print(r)
+
