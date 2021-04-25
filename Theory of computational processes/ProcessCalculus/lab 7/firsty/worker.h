@@ -7,7 +7,7 @@ class Worker : public QObject
 {
     Q_OBJECT
 
-    unsigned long n;
+    unsigned long n = 10000;
     double result;
 
 public:

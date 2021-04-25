@@ -7,10 +7,5 @@ print("""
 в) являющихся квадратами четных чисел;
 """)
 
-n = int(input("Введите n: "))
-arr = []
-for i in range(0, n):
-    x = float(input("Введите число: "))
-    arr.append(x)
-
+arr = mymodule.user_input()
 print(mymodule.v178(arr))

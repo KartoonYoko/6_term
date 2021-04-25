@@ -1,2 +1,4 @@
 ﻿  Source.cpp
-  Project2.vcxproj -> C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\OS\Project2\Debug\Project2.exe
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\OS\Project2\Source.cpp(5,9): error C2664: "int MessageBoxW(HWND,LPCWSTR,LPCWSTR,UINT)": невозможно преобразовать аргумент 2 из "const char [16]" в "LPCWSTR"
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\OS\Project2\Source.cpp(5,26): message : Типы, на которые указывают указатели, не связаны; для преобразования требуется reinterpret_cast, приведение в стиле С или приведение в стиле функции
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\winuser.h(9161,1): message : см. объявление "MessageBoxW"

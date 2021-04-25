@@ -2,8 +2,22 @@ import math
 import numpy as np
 
 
+def user_input() -> list:
+    '''
+        Пользовательский ввод для заполнения списка
+    '''
+    n = int(input("Введите n(размер массива): "))
+    arr = []
+    for i in range(0, n):
+        x = float(input("Введите число: "))
+        arr.append(x)
+    return arr
+
+
 def o136(a):
-    """ """
+    """
+     Формула из 136 о
+     """
     sum = 0
     for k in a:
         sum += math.sqrt(10 + k ** 2)
@@ -11,25 +25,29 @@ def o136(a):
 
 
 def v178(a):
-    """ """
+    """
+    Определяет количество членов являющихся квадратами четных чисел;
+     """
     count = 0
     for k in a:
         buf = math.sqrt(k)
         int_part = buf // 1
         real_part = buf % 1
-        if ((real_part == 0) and (int_part % 2 == 0)):
+        if (real_part == 0) and (int_part % 2 == 0):
             count += 1
     return count
 
 
-def b334():
-    """ """
-    sum = 0
-    for i in range(0, 100):
-        for j in range(0, 60):
-           sum += math.sin(i ** 3 + j ** 4)
+def b334(n1, n2):
+    """
+     Формула из 334 б
+     """
+    sum_buf = 0
+    for i in range(0, n1):
+        for j in range(0, n2):
+           sum_buf += math.sin(i ** 3 + j ** 4)
 
-    return sum
+    return sum_buf
 
 
 def a675(arr):

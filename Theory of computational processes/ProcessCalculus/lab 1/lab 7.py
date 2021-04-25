@@ -6,4 +6,4 @@ print("""
 Вычислить
 """)
 
-print(mymodule.b334())
+print(mymodule.b334(100, 60))

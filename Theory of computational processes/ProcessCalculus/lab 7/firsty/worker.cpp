@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 #include "worker.h"
 
 Worker::Worker(QObject *parent):QObject(parent)
@@ -17,12 +17,24 @@ void Worker::process(){
     this->result = 0;
 
     emit started();
-    double v = 0;
-    for (unsigned long i = 1; i <= this->n; i += 4) {  // increment by 4
-        v +=  1 / i - 1 / (i + 2); // add the value of the series
-    }
-
-    this->result = 4 * v;
+    double pi = 0;
+        int k = 0;
+        int n = this->n;
+        while (k < n){
+           pi += (pow(-1., k) / pow(1024., k))
+                   * (
+                       -1 * 32. / (4. * k + 1)
+                       - 1. / (4. * k + 3)
+                       + 256. / (10. * k + 1)
+                       - 64. / (10. * k + 3)
+                       - 4. / (10. * k + 5)
+                       - 4 / (10. * k + 7)
+                       + 1. / (10. * k + 9)
+                  );
+           k++;
+        }
+    pi *= 1 / (pow(2., 6));
+    this->result = pi;
 
     emit finished();
 }
