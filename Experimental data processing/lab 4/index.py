@@ -162,10 +162,10 @@ for i in range(len(t2_nuv)):
 n_nv = count
 # коэф корреляции TODO неверно считает
 r = (n_nv - n * u_average * v_average) / (n * Su * Sv)
+
+print(r)
 print(n_nv)
 print(u_average)
 print(v_average)
 print(Sv)
 print(Su)
-print(r)
-
