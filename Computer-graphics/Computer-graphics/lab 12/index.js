@@ -25,7 +25,7 @@ function setPixel(ctx, x, y, color){
  * Закрасить, используя битмап
  * @param {*} ctx 
  * @param {*} b 
- * @param {*} x 
+ * @param {*} x  - с какого пикселя начать
  * @param {*} y 
  */
 function fillRectWithBitmap(ctx, b, x, y){
@@ -41,10 +41,10 @@ function fillRectWithBitmap(ctx, b, x, y){
  * Возвращает битмап прямоугльника
  * 
  * @param {*} ctx 
- * @param {*} x 
- * @param {*} y 
- * @param {*} width 
- * @param {*} height 
+ * @param {*} x - с какого пикселя начать по Х
+ * @param {*} y - с какого пикселя начать по Y 
+ * @param {*} width - cколько пикселей по ширине взять
+ * @param {*} height - по высоте
  * @returns {Array} arr
  */
 function getBitmap(ctx, x, y, width, height){
@@ -115,18 +115,53 @@ function MultiplyMatrix(A,B)
 }
 
 /**
- * Применяет фильтр
+ * Применяет фильтр к битмапу
  * 
- * @param {*} b - bitmap
- * @param {*} a - filter
+ * @param {*} bitmap - bitmap NxN
+ * @param {*} filter - filter MxM пока фильтр только 3x3 
+ * @param {*} filterNumber - float
  */
-function filterBitmap(k, b, a){
-    let res = MultiplyMatrix(b, a);
-    console.log(b);
-    console.log(res);
-    res = multMatrixNumber(k, res);
-    return res;
+function filterBitmap(filterNumber, bitmap, filter){
+    let sizeOfBitmap = bitmap.length;
+    let sizeOfFilter = filter.length;
+    for (let i = 1; i < sizeOfBitmap - 1; i++){
+        for (let j = 1; j < sizeOfBitmap - 1; j++){
+            // получим битмап размера фильтра для переумножения
+            let bitmapArr = [];
+            for (let k = i - 1; k < i + sizeOfFilter - 1; k++){     // TODO: для любого размера фильтра
+                let bufArr = [];
+                for (let h = j - 1; h < j + sizeOfFilter - 1; h++){     // TODO: для любого размера фильтра
+                    bufArr.push(bitmap[k][h]);
+                }
+                bitmapArr.push(bufArr);
+            }
+
+            let res = MultiplyMatrix(bitmapArr, filter);
+            res = multMatrixNumber(filterNumber, res);
+            // Внесем изменения
+            let count1 = 0;
+            for (let k = i - 1; k < i + sizeOfFilter - 1; k++){     // TODO: для любого размера фильтра
+                let count2 = 0;
+                for (let h = j - 1; h < j + sizeOfFilter - 1; h++){     // TODO: для любого размера фильтра
+                    bitmap[k][h] = res[count1][count2];
+                    count2++;   
+                }
+                count1++;
+            }      
+        }
+    }
 }
+
+
+function colorBitmap(bitmap){
+    let sizeOfBitmap = bitmap.length;
+    for (let i = 1; i < sizeOfBitmap - 1; i++){
+        for (let j = 1; j < sizeOfBitmap - 1; j++){
+            bitmap[i][j] = [0, 0, 0];
+        }
+    }
+}
+
 
 const CANVAS_WIDTH = 1500;
 const CANVAS_HEIGHT = 800;
@@ -154,13 +189,15 @@ img1.onload = function(){
         }
         arr.push(a);
     }
-    let xBitmap = 10;
-    let yBitmap = 10;
-    bitmap1 = getBitmap(ctx, xBitmap, yBitmap, n, n);
-    let bm = filterBitmap(1 / n, bitmap1, arr);
+    let widthBitmap = 500;
+    let heightBitmap = 500;
+    bitmap1 = getBitmap(ctx, 0, 0, widthBitmap, heightBitmap);
     // console.log(bitmap1);
-    // console.log(bm);
-    fillRectWithBitmap(ctx, bm, xBitmap, yBitmap);
+    // let bm = filterBitmap(1 / n, bitmap1, arr);
+    filterBitmap(1 / (n), bitmap1, arr);
+    // console.log(bitmap1);
+    // colorBitmap(bitmap1);
+    fillRectWithBitmap(ctx, bitmap1, 0, 0);
 }
 
 
