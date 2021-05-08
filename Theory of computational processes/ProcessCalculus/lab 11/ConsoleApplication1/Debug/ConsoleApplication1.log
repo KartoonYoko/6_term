@@ -1,0 +1,4 @@
+﻿  ConsoleApplication1.cpp
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Theory of computational processes\ProcessCalculus\lab 11\ConsoleApplication1\ConsoleApplication1.cpp(24,27): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Theory of computational processes\ProcessCalculus\lab 11\ConsoleApplication1\ConsoleApplication1.cpp(27,27): warning C4018: <: несоответствие типов со знаком и без знака
+  ConsoleApplication1.vcxproj -> C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Theory of computational processes\ProcessCalculus\lab 11\ConsoleApplication1\Debug\ConsoleApplication1.exe

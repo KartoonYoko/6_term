@@ -16,6 +16,48 @@ def log(func, cmd):
         print("\033[31m%s\033[0m: \033[32m%s\033[0m" % (logmsg, cmd))
 
 
+def fileProperty(filepath):
+    """
+    :param filepath: путь к каталогу
+    return information from given file, like this "-rw-r--r-- 1 User Group 312 Aug 1 2014 filename"
+    """
+    st = os.stat(filepath)
+    fileMessage = []
+
+    def _getFileMode():
+        modes = [
+            stat.S_IRUSR, stat.S_IWUSR, stat.S_IXUSR,
+            stat.S_IRGRP, stat.S_IWGRP, stat.S_IXGRP,
+            stat.S_IROTH, stat.S_IWOTH, stat.S_IXOTH,
+        ]
+        mode = st.st_mode
+        fullmode = ''
+        fullmode += os.path.isdir(filepath) and 'd' or '-'
+
+        for i in range(9):
+            fullmode += bool(mode & modes[i]) and 'rwxrwxrwx'[i] or '-'
+        return fullmode
+
+    def _getFilesNumber():
+        return str(st.st_nlink)
+
+    def _getUser():
+        return str(st.st_uid)
+
+    def _getGroup():
+        return str(st.st_gid)
+
+    def _getSize():
+        return str(st.st_size)
+
+    def _getLastTime():
+        return time.strftime('%b %d %H:%M', time.gmtime(st.st_mtime))
+    for func in ('_getFileMode()', '_getFilesNumber()', '_getUser()', '_getGroup()', '_getSize()', '_getLastTime()'):
+        fileMessage.append(eval(func))
+    fileMessage.append(os.path.basename(filepath))
+    return ' '.join(fileMessage)
+
+
 class FtpServerProtocol(threading.Thread):
     def __init__(self, commSock, address):
         threading.Thread.__init__(self)
@@ -23,12 +65,12 @@ class FtpServerProtocol(threading.Thread):
         self.pasv_mode     = False
         self.rest          = False
         self.cwd           = CWD
-        self.commSock      = commSock   # communication socket as command channel
+        self.commSock      = commSock   # управляющее соединение
         self.address       = address
 
     def run(self):
         """
-        receive commands from client and execute commands
+            Запускает поток с обработкой управляющего соединения
         """
         self.sendWelcome()
         while True:
@@ -45,7 +87,7 @@ class FtpServerProtocol(threading.Thread):
                 log('Receive', err)
 
             try:
-                cmd, arg = cmd[:4].strip().upper(), cmd[4:].strip( ) or None
+                cmd, arg = cmd[:4].strip().upper(), cmd[4:].strip() or None
                 func = getattr(self, cmd)
                 func(arg)
             except AttributeError as err:
@@ -53,15 +95,18 @@ class FtpServerProtocol(threading.Thread):
                     'This may include errors such as command line too long.\r\n')
                 log('Receive', err)
 
-    #-------------------------------------#
-    ## Create Ftp data transport channel ##
-    #-------------------------------------#
+    # ---------------------------------------#
+    #  Создание tcp туннеля передачи данных  #
+    # ---------------------------------------#
     def startDataSock(self):
+        """
+            Создает сокет для передачи данных
+        """
         log('startDataSock', 'Opening a data channel')
         try:
             self.dataSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             if self.pasv_mode:
-                self.dataSock, self.address = self.serverSock.accept( )
+                self.dataSock, self.address = self.serverSock.accept()
 
             else:
                 self.dataSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -72,9 +117,9 @@ class FtpServerProtocol(threading.Thread):
     def stopDataSock(self):
         log('stopDataSock', 'Closing a data channel')
         try:
-            self.dataSock.close( )
+            self.dataSock.close()
             if self.pasv_mode:
-                self.serverSock.close( )
+                self.serverSock.close()
         except socket.error as err:
             log('stopDataSock', err)
 
@@ -82,12 +127,19 @@ class FtpServerProtocol(threading.Thread):
         self.commSock.send(cmd.encode('utf-8'))
 
     def sendData(self, data):
-        self.dataSock.send(data.encode('utf-8'))
+        if isinstance(data, str):
+            self.dataSock.send(data.encode('utf-8'))
+        else:
+            self.dataSock.send(data)
 
-    #------------------------------#
-    ## Ftp services and functions ##
-    #------------------------------#
+    # ---------------------------- #
+    #           Ftp функции        #
+    # ---------------------------- #
     def USER(self, user):
+        """
+            указать имя пользователя
+            :param user: имя пользователя
+        """
         log("USER", user)
         if not user:
             self.sendCommand('501 Syntax error in parameters or arguments.\r\n')
@@ -97,6 +149,10 @@ class FtpServerProtocol(threading.Thread):
             self.username = user
 
     def PASS(self, passwd):
+        """
+            указать пароль
+            :param passwd: пароль
+        """
         log("PASS", passwd)
         if not passwd:
             self.sendCommand('501 Syntax error in parameters or arguments.\r\n')
@@ -110,6 +166,10 @@ class FtpServerProtocol(threading.Thread):
             self.authenticated = True
 
     def TYPE(self, type):
+        """
+            Установить режим передачи
+            :param type:
+        """
         log('TYPE', type)
         self.mode = type
         if self.mode == 'I':
@@ -118,30 +178,21 @@ class FtpServerProtocol(threading.Thread):
             self.sendCommand('200 Ascii mode.\r\n')
 
     def PASV(self, cmd):
+        """
+            использовать пассивный режим
+            :param cmd:
+        """
         log("PASV", cmd)
         self.pasv_mode  = True
         self.serverSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.serverSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.serverSock.bind((HOST, 0))
         self.serverSock.listen(5)
-        addr, port = self.serverSock.getsockname( )
-        #self.sendCommand('277 Entering Passve mode (%s,%d,%d).\r\n' %
-          #  (addr.replace('.', ','), (port / 256), (port % 256)))
-        #self.sendCommand('227 Entering Passive Mode (%s,%u,%u).\r\n' % (','.join(addr.split('.')), port>>8&0xFF, port&0xFF))
-        #self.sendCommand('227 Entering Passive Mode (%s,%u,%u).\r\n' % (','.join(addr.split('.')), port>>8&0xFF, port&0xFF))
+        addr, port = self.serverSock.getsockname()
         self.sendCommand('227 Entering Passive Mode (%s,%u,%u).\r\n' %
                 (','.join(addr.split('.')), port>>8&0xFF, port&0xFF))
 
-    '''
-    def PORT(self, pair):
-        log('PORT', pair)
-        pair = pair.split(',')
-        ip, p1, p2 = ('.'.join(pair[:4]), pair[5], pair[6])
-        self.dataSockAddr = ip
-        self.dataSockPort = (256 * p1) + p2
-        self.sendCommand('200 Ok.\r\n')
-    '''
-    def PORT(self,cmd):
+    def PORT(self, cmd):
         log("PORT: ", cmd)
         if self.pasv_mode:
             self.servsock.close()
@@ -152,6 +203,10 @@ class FtpServerProtocol(threading.Thread):
         self.sendCommand('200 Get port.\r\n')
 
     def LIST(self, dirpath):
+        """
+            просмотр содержимого каталога
+            :param dirpath:
+        """
         if not self.authenticated:
             self.sendCommand('530 User not logged in.\r\n')
             return
@@ -172,7 +227,7 @@ class FtpServerProtocol(threading.Thread):
 
         else:
             self.sendCommand('150 Here is listing.\r\n')
-            self.startDataSock( )
+            self.startDataSock()
             if not os.path.isdir(pathname):
                 fileMessage = fileProperty(pathname)
                 self.dataSock.sock(fileMessage+'\r\n')
@@ -181,14 +236,19 @@ class FtpServerProtocol(threading.Thread):
                 for file in os.listdir(pathname):
                     fileMessage = fileProperty(os.path.join(pathname, file))
                     self.sendData(fileMessage+'\r\n')
-            self.stopDataSock( )
+            self.stopDataSock()
             self.sendCommand('226 List done.\r\n')
 
     def NLIST(self, dirpath):
         self.LIST(dirpath)
 
     def CWD(self, dirpath):
-        pathname = dirpath.endswith(os.path.sep) and dirpath or os.path.join(self.cwd, dirpath)
+        """
+        Смена каталога
+        :param dirpath:
+        """
+        # pathname = dirpath.endswith(os.path.sep) and dirpath or os.path.join(self.cwd, dirpath)
+        pathname = os.path.join(dirpath)
         log('CWD', pathname)
         if not os.path.exists(pathname) or not os.path.isdir(pathname):
             self.sendCommand('550 CWD failed Directory not exists.\r\n')
@@ -201,11 +261,19 @@ class FtpServerProtocol(threading.Thread):
         self.sendCommand('257 "%s".\r\n' % self.cwd)
 
     def CDUP(self, cmd):
+        """
+            Подняться вверх на каталог
+        """
         self.cwd = os.path.abspath(os.path.join(self.cwd, '..'))
         log('CDUP', self.cwd)
         self.sendCommand('200 Ok.\r\n')
 
     def DELE(self, filename):
+        """
+        Удалить файл
+        :param filename:
+        :return:
+        """
         pathname = filename.endswith(os.path.sep) and filename or os.path.join(self.cwd, filename)
         log('DELE', pathname)
         if not self.authenticated:
@@ -222,6 +290,10 @@ class FtpServerProtocol(threading.Thread):
             self.sendCommand('250 File deleted.\r\n')
 
     def MKD(self, dirname):
+        """
+        Создать каталог
+        :param dirname:
+        """
         pathname = dirname.endswith(os.path.sep) and dirname or os.path.join(self.cwd, dirname)
         log('MKD', pathname)
         if not self.authenticated:
@@ -235,6 +307,10 @@ class FtpServerProtocol(threading.Thread):
                 self.sendCommand('550 MKD failed Directory "%s" already exists.\r\n' % pathname)
 
     def RMD(self, dirname):
+        """
+        Удалить каталог
+        :param dirname:
+        """
         import shutil
         pathname = dirname.endswith(os.path.sep) and dirname or os.path.join(self.cwd, dirname)
         log('RMD', pathname)
@@ -277,12 +353,16 @@ class FtpServerProtocol(threading.Thread):
         self.sendCommand('250 File position reseted.\r\n')
 
     def RETR(self, filename):
+        """
+        Передать файл с сервера на клиент
+        :param filename:
+        """
         pathname = os.path.join(self.cwd, filename)
         log('RETR', pathname)
         if not os.path.exists(pathname):
             return
         try:
-            if self.mode=='I':
+            if self.mode == 'I':
                 file = open(pathname, 'rb')
             else:
                 file = open(pathname, 'r')
@@ -294,17 +374,21 @@ class FtpServerProtocol(threading.Thread):
             file.seek(self.pos)
             self.rest = False
 
-        self.startDataSock( )
+        self.startDataSock()
         while True:
             data = file.read(1024)
-            if not data: break
+            if not data:
+                break
             self.sendData(data)
-        file.close( )
-        self.stopDataSock( )
+        file.close()
+        self.stopDataSock()
         self.sendCommand('226 Transfer complete.\r\n')
 
-
     def STOR(self, filename):
+        """
+        Передать файл с клиента на сервер
+        :param filename:
+        """
         if not self.authenticated:
             self.sendCommand('530 STOR failed User not logged in.\r\n')
             return
@@ -325,8 +409,8 @@ class FtpServerProtocol(threading.Thread):
             data = self.dataSock.recv(1024)
             if not data: break
             file.write(data)
-        file.close( )
-        self.stopDataSock( )
+        file.close()
+        self.stopDataSock()
         self.sendCommand('226 Transfer completed.\r\n')
 
     def APPE(self, filename):
@@ -337,7 +421,7 @@ class FtpServerProtocol(threading.Thread):
         pathname = filename.endswith(os.path.sep) and filename or os.path.join(self.cwd, filename)
         log('APPE', pathname)
         self.sendCommand('150 Opening data connection.\r\n')
-        self.startDataSock( )
+        self.startDataSock()
         if not os.path.exists(pathname):
             if self.mode == 'I':
                 file = open(pathname, 'wb')
@@ -410,6 +494,10 @@ class FtpServerProtocol(threading.Thread):
         self.sendCommand(help)
 
     def QUIT(self, arg):
+        """
+        Выход и разрыв соединения
+        :param arg:
+        """
         log('QUIT', arg)
         self.sendCommand('221 Goodbye.\r\n')
 
@@ -417,10 +505,14 @@ class FtpServerProtocol(threading.Thread):
         """
         when connection created with client will send a welcome message to the client
         """
-        self.sendCommand('220 Welcome.\r\n')
+        self.sendCommand('220 Yipee-ki-yay and welcome, user.\r\n')
 
 
-def serverListener( ):
+listen_sock = None
+stop = False
+
+
+def server_listener():
     global listen_sock
     listen_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     listen_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -428,11 +520,15 @@ def serverListener( ):
     listen_sock.listen(5)
 
     log('Server started', 'Listen on: %s, %s' % listen_sock.getsockname( ))
-    while True:
-        connection, address = listen_sock.accept( )
-        f = FtpServerProtocol(connection, address)
-        f.start( )
-        log('Accept', 'Created a new connection %s, %s' % address)
+    while not stop:
+        try:
+            connection, address = listen_sock.accept()
+        except socket.error:
+            log('Close socket', 'Socket closed')
+        else:
+            f = FtpServerProtocol(connection, address)
+            f.start()
+            log('Accept', 'Created a new connection %s, %s' % address)
 
 
 if __name__ == "__main__":
@@ -440,18 +536,18 @@ if __name__ == "__main__":
         HOST = socket.gethostbyname(socket.gethostname())
     except socket.gaierror:
         HOST = 'localhost'
-    # PORT = 21  # command port
-    CWD = os.getenv('HOME')
-    PORT = 9999
+    if not os.path.isdir("storage"):
+        os.mkdir("storage")
+    CWD = 'storage'
+    # HOST = 'localhost'
+    PORT = 21
 
     log('Start ftp server', 'Enter q or Q to stop ftpServer...')
-    listener = threading.Thread(target=serverListener)
-    listener.start( )
-
-    if sys.version_info[0] < 3:
-        input = raw_input
+    listener = threading.Thread(target=server_listener)
+    listener.start()
 
     if input().lower() == "q":
-        listen_sock.close( )
         log('Server stop', 'Server closed')
-        sys.exit( )
+        listen_sock.close()
+        stop = True
+        sys.exit()
