@@ -3,6 +3,7 @@
 #include <cmath>
 #include <mutex>
 #include <chrono>
+#include <vector>
 
 using namespace std;
 
@@ -50,19 +51,20 @@ void f1(double& v, int k, int n) {
 }
 
 
-void calculatePIinThreads(double& pi, int k, const int n) {
+void calculatePIinThreads(double& pi, int k, const int n, const int threadsCount) {
     pi = 0;
-    double _f1, _f2, _f3, _f4;
-    int count = n / 4;
-    thread t1(f1, ref(_f1), k, count);
-    thread t2(f1, ref(_f2), k + count, count * 2);
-    thread t3(f1, ref(_f3), k + count * 2, count * 3);
-    thread t4(f1, ref(_f4), k + count * 3, count * 4);
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
-    pi += _f1 + _f2 + _f3 + _f4;
+    int count = n / threadsCount;
+    vector<thread*> threads(threadsCount);
+    vector<double> ans(threadsCount);
+    for (int i = 0; i < threadsCount; i++) 
+        threads[i] = new thread(f1, ref(ans[i]), k + count * i, count * (i + 1));
+    
+    for (int i = 0; i < threadsCount; i++)
+        threads[i]->join();
+    
+    for (int i = 0; i < threadsCount; i++)
+        pi += ans[i];
+
     pi *= 1 / (pow(2., 6));
 }
 
@@ -80,7 +82,7 @@ int main()
     cout << pi;
 
     auto t1 = system_clock::now();
-    calculatePIinThreads(pi, k, n);
+    calculatePIinThreads(pi, k, n, 4);
     cout << endl;
     cout << endl;
     cout << "Many threads " << endl;

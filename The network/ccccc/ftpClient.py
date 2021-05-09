@@ -72,7 +72,7 @@ class App(QtWidgets.QMainWindow, design.Ui_MainWindow):
             if content.startswith('d'):
                 self.cd_to_dir(item.text(0))
             else:
-                self.download_file()
+                self.download_file(item.text(0))
 
     def cd_to_dir(self, dir_name):
         if dir_name == BACK_DIRECTORY:
@@ -90,8 +90,19 @@ class App(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.pwd = self.ftp.pwd()
             self.update_remote_list()
 
-    def download_file(self):
-        pass
+    def download_file(self, file_name):
+        file = open(file_name, 'wb')
+
+        def callback(data):
+            # pb.set_value(data)
+            file.write(data)
+
+        srcfile = os.path.join(self.local_pwd, file_name)
+
+        fp = FTP()
+        fp.connect(host=self.ftp.host, port=self.ftp.port, timeout=self.ftp.timeout)
+        fp.login(user=self.ftp.user, passwd=self.ftp.passwd)
+        fp.retrbinary(cmd='RETR ' + srcfile, callback=callback)
 
     def get_path(self, arr):
         """
