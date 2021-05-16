@@ -92,7 +92,7 @@
           <normaloff>icons/next.png</normaloff>icons/next.png</iconset>
         </property>
        </widget>
-       <widget class="QPushButton" name="downloadButton">
+       <widget class="QPushButton" name="uploadButton">
         <property name="geometry">
          <rect>
           <x>780</x>

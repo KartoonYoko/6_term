@@ -47,5 +47,5 @@ class Ui_Dialog(object):
         self.registerRadio.setText(_translate("Dialog", "Registr"))
         self.label_2.setText(_translate("Dialog", "Password"))
         self.label.setText(_translate("Dialog", "Name"))
-        self.pushButton.setText(_translate("Dialog", "PushButton"))
+        self.pushButton.setText(_translate("Dialog", "Connect"))
         self.visitorRadio.setText(_translate("Dialog", "Visitor"))

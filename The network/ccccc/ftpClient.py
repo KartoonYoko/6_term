@@ -52,7 +52,8 @@ class App(QtWidgets.QMainWindow, design.Ui_MainWindow):
         """
         """
         self.connectButton.clicked.connect(self.connect)
-        self.fileList.itemClicked.connect(self.click_item)
+        self.fileList.itemDoubleClicked.connect(self.click_item)
+        self.uploadButton.clicked.connect(self.upload_file)
 
     def click_item(self, item, column):
         """
@@ -78,12 +79,12 @@ class App(QtWidgets.QMainWindow, design.Ui_MainWindow):
         if dir_name == BACK_DIRECTORY:
             if self.pwd != self.remote_pwd:
                 self.remote_path.pop()
-                pathname = self.get_path(self.remote_path)
+                pathname = self.get_path()
             else:
                 pathname = False
         else:
             self.remote_path.append(dir_name)
-            pathname = self.get_path(self.remote_path)
+            pathname = self.get_path()
 
         if pathname:
             self.ftp.cwd(pathname)
@@ -91,29 +92,35 @@ class App(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.update_remote_list()
 
     def download_file(self, file_name):
-        file = open(file_name, 'wb')
+        storage = self.local_pwd + DIRECTORY_SEPARATOR + file_name
+        file = open(storage, 'wb')
 
         def callback(data):
-            # pb.set_value(data)
             file.write(data)
 
-        srcfile = os.path.join(self.local_pwd, file_name)
+        srcfile = self.get_path(file_name)
 
-        fp = FTP()
-        fp.connect(host=self.ftp.host, port=self.ftp.port, timeout=self.ftp.timeout)
-        fp.login(user=self.ftp.user, passwd=self.ftp.passwd)
-        fp.retrbinary(cmd='RETR ' + srcfile, callback=callback)
+        self.ftp.set_pasv(True)
+        try:
+            self.ftp.retrbinary(cmd='RETR ' + srcfile, callback=callback)
+        except Exception as error:
+            print(error)
 
-    def get_path(self, arr):
+    def upload_file(self):
+        pass
+
+    def get_path(self, arr=""):
         """
             Формирует путь из массива каталгов
         :param arr:
         :return string:
         """
-        if arr:
+        if self.remote_path:
             pathname = ''
-            for key in arr:
+            for key in self.remote_path:
                 pathname = os.path.join(pathname, key)
+            if arr:
+                pathname = os.path.join(pathname, arr)
             pathname = pathname.replace('\\', '/')
             return pathname
         else:

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import math
 import numpy as np
-
+from mpl_toolkits.mplot3d import Axes3D
 # variant 17
 # (5.81, 4.27)
 # 7 and 8
@@ -115,31 +115,27 @@ def bernstein(x1, x2, z, x, y):
     d = np.max(x2)
     res = 0
     for k in range(n):
-        buf = 0
         for l in range(m):
-            # z(Xk, Yk) TODO откуда или как посчитать
-            buf = combinations(k, n) * combinations(l, m)
+            buf = z[l]
+            buf *= combinations(k, n) * combinations(l, m)
             buf *= ((x - a) / (b - a)) ** k * (1 - (x - a) / (b - a)) ** (n - k)
             buf *= ((y - c) / (d - c)) ** l * (1 - ((y - c) / (d - c))) ** (m - l)
             res += buf
     return res
 
 
-# Xk = a + (b - a) / n * k; k = 0, n
-# Yl = c + (d - c) / m * l; l = 0, m
-print(np.sort(x))
-print(np.sort(y))
-print(np.sort(z))
-n = 100
-xnew = np.linspace(np.min(x), np.max(x), n)
-ynew = np.linspace(np.min(y), np.max(y), n)
 znew = []
-# znew = [bernstein(x, y, z, i, j) for i in xnew for j in ynew]
-for i in xnew:
-    for j in ynew:
+for i in x:
+    for j in y:
         znew.append(bernstein(x, y, z, i, j))
 print(znew)
-plt.plot(x, y, 'o', xnew, ynew) # TODO построить 3д график, т.к. это поверхность
-plt.grid(True)
+# plt.plot(x, y, '-')
+# plt.grid(True)
+# для оценки аппроксимации:
+# L / (2 * sqrt(n)) + M / (sqrt(m))
+# где M L ограничивают первую частную производную ф-ии z (как найти производную?)
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(x, y, z, label='parametric curve')
 plt.show()
 

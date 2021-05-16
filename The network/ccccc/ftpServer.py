@@ -180,6 +180,11 @@ class FtpServerProtocol(threading.Thread):
     def PASV(self, cmd):
         """
             использовать пассивный режим
+            This command requests the server-DTP to "listen" on a data
+            port (which is not its default data port) and to wait for a
+            connection rather than initiate one upon receipt of a
+            transfer command.  The response to this command includes the
+            host and port address this server is listening on.
             :param cmd:
         """
         log("PASV", cmd)
@@ -357,9 +362,11 @@ class FtpServerProtocol(threading.Thread):
         Передать файл с сервера на клиент
         :param filename:
         """
-        pathname = os.path.join(self.cwd, filename)
+        # pathname = os.path.join(self.cwd, filename)
+        pathname = os.path.join(filename)
         log('RETR', pathname)
         if not os.path.exists(pathname):
+            self.sendCommand('550 Failed to open file.\r\n')
             return
         try:
             if self.mode == 'I':
