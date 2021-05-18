@@ -128,14 +128,14 @@ znew = []
 for i in x:
     for j in y:
         znew.append(bernstein(x, y, z, i, j))
-print(znew)
-plt.plot(x, y, '-')
-plt.grid(True)
+# print(znew)
+# plt.plot(x, y, '-')
+# plt.grid(True)
 # для оценки аппроксимации:
 # L / (2 * sqrt(n)) + M / (sqrt(m))
 # где M L ограничивают первую частную производную ф-ии z (как найти производную?)
-# fig = plt.figure()
-# ax = fig.add_subplot(111, projection='3d')
-# ax.plot(x, y, z, label='parametric curve')
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(x, y, z, label='parametric curve')
 plt.show()
 

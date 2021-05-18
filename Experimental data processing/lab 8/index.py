@@ -66,19 +66,22 @@ def BuildSpline(x, y, n):
             sp_lin.append(splines[i * 2 + j].get_spline())
 
     # заполним массивы для решения СЛАУ
-    sp_symbols = []
+    sp_symbols = ''
     for i in range(amount):
-        sp_symbols.append("a" + str(i + 1) + "0, " + "a" + str(i + 1) + "1, " + "a" + str(i + 1) + "2")
-    arr = []
+        sp_symbols += "a" + str(i + 1) + "0, " + "a" + str(i + 1) + "1, " + "a" + str(i + 1) + "2" + ", "
+
     arr = symbols(sp_symbols)
     for key in splines:
         key.print_spline()
-    print(linsolve(sp_lin, ))
-    return splines
+    return linsolve(sp_lin, (arr))
 
 
 x = [0, 0.25, 0.5, 0.75, 1]
 y = [2, 3, 5, 4, 6]
-BuildSpline(x, y, len(x))
-p = ()
-print(type(p))
+ans = BuildSpline(x, y, len(x))
+
+print()
+j = 0
+for key in ans:
+    for i in key:
+        print(i)
