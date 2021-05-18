@@ -93,7 +93,7 @@ def make_graph(is_draw=True):
         plt.show()
 
 
-make_graph(False)
+make_graph(True)
 
 # найдем коэф парной корреляции
 x1_aver = sum(x1_arr) / n
