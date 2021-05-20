@@ -53,7 +53,6 @@ class App(QtWidgets.QMainWindow, design.Ui_MainWindow):
         """
         self.connectButton.clicked.connect(self.connect)
         self.fileList.itemDoubleClicked.connect(self.click_item)
-        # self.uploadButton.clicked.connect(self.upload_file)
 
     def click_item(self, item, column):
         """

@@ -4,58 +4,43 @@
 import socket
 import threading
 import os
-import stat
 import sys
 import time
+from usersList import *
+from fileFunctions import *
+from groupList import *
 
 allow_delete = False
+LOG_FILE_NAME = "log_file.txt"
+LOG_FILE = None
+COMMON_GROUP = "common"
+
+
+def open_file():
+    global LOG_FILE
+    if os.path.exists(LOG_FILE_NAME):
+        LOG_FILE = open(LOG_FILE_NAME, 'a')
+    else:
+        LOG_FILE = open(LOG_FILE_NAME, 'w')
+
+
+def close_file():
+    global LOG_FILE
+    LOG_FILE.close()
 
 
 def log(func, cmd):
-        logmsg = time.strftime("%Y-%m-%d %H-%M-%S [-] " + func)
-        print("\033[31m%s\033[0m: \033[32m%s\033[0m" % (logmsg, cmd))
+    global LOG_FILE
+    logmsg = time.strftime("%Y-%m-%d %H-%M-%S [-] " + func)
+    print("\033[31m%s\033[0m: \033[32m%s\033[0m" % (logmsg, cmd))
 
-
-def fileProperty(filepath):
-    """
-    :param filepath: путь к каталогу
-    return information from given file, like this "-rw-r--r-- 1 User Group 312 Aug 1 2014 filename"
-    """
-    st = os.stat(filepath)
-    fileMessage = []
-
-    def _getFileMode():
-        modes = [
-            stat.S_IRUSR, stat.S_IWUSR, stat.S_IXUSR,
-            stat.S_IRGRP, stat.S_IWGRP, stat.S_IXGRP,
-            stat.S_IROTH, stat.S_IWOTH, stat.S_IXOTH,
-        ]
-        mode = st.st_mode
-        fullmode = ''
-        fullmode += os.path.isdir(filepath) and 'd' or '-'
-
-        for i in range(9):
-            fullmode += bool(mode & modes[i]) and 'rwxrwxrwx'[i] or '-'
-        return fullmode
-
-    def _getFilesNumber():
-        return str(st.st_nlink)
-
-    def _getUser():
-        return str(st.st_uid)
-
-    def _getGroup():
-        return str(st.st_gid)
-
-    def _getSize():
-        return str(st.st_size)
-
-    def _getLastTime():
-        return time.strftime('%b %d %H:%M', time.gmtime(st.st_mtime))
-    for func in ('_getFileMode()', '_getFilesNumber()', '_getUser()', '_getGroup()', '_getSize()', '_getLastTime()'):
-        fileMessage.append(eval(func))
-    fileMessage.append(os.path.basename(filepath))
-    return ' '.join(fileMessage)
+    if LOG_FILE:
+        open_file()
+    try:
+        LOG_FILE.write("[%s]: %s" % (logmsg, cmd) + "\r")
+    except Exception as err:
+        print(err)
+    close_file()
 
 
 class FtpServerProtocol(threading.Thread):
@@ -67,6 +52,8 @@ class FtpServerProtocol(threading.Thread):
         self.cwd           = CWD
         self.commSock      = commSock   # управляющее соединение
         self.address       = address
+        self.list_users    = UsersList()
+        self.list_groups   = GroupList()
 
     def run(self):
         """
@@ -94,6 +81,17 @@ class FtpServerProtocol(threading.Thread):
                 self.sendCommand('500 Syntax error, command unrecognized. '
                     'This may include errors such as command line too long.\r\n')
                 log('Receive', err)
+
+    # TODO
+    def check_rules(self, filename, mode='r'):
+        """
+        :param String filename:
+            abs file path
+        :param String mode:
+            r || w || x
+        :return:
+        """
+        self.list_groups.get_group_file_rules(filename, self.user_group)
 
     # ---------------------------------------#
     #  Создание tcp туннеля передачи данных  #
@@ -164,6 +162,9 @@ class FtpServerProtocol(threading.Thread):
             self.sendCommand('230 User logged in, proceed.\r\n')
             self.passwd = passwd
             self.authenticated = True
+            if not self.list_users.get_user(self.username):
+                self.list_users.add_user(self.username, self.passwd)
+            self.user_group = self.list_groups.get_group(self.username)
 
     def TYPE(self, type):
         """
@@ -526,7 +527,7 @@ def server_listener():
     listen_sock.bind((HOST, PORT))
     listen_sock.listen(5)
 
-    log('Server started', 'Listen on: %s, %s' % listen_sock.getsockname( ))
+    log('Server started', 'Listen on: %s, %s' % listen_sock.getsockname())
     while not stop:
         try:
             connection, address = listen_sock.accept()
@@ -539,6 +540,10 @@ def server_listener():
 
 
 if __name__ == "__main__":
+    # create log file
+    open_file()
+    LOG_FILE.write("\r\n")
+
     try:
         HOST = socket.gethostbyname(socket.gethostname())
     except socket.gaierror:
@@ -546,7 +551,6 @@ if __name__ == "__main__":
     if not os.path.isdir("storage"):
         os.mkdir("storage")
     CWD = 'storage'
-    # HOST = 'localhost'
     PORT = 21
 
     log('Start ftp server', 'Enter q or Q to stop ftpServer...')
@@ -557,4 +561,5 @@ if __name__ == "__main__":
         log('Server stop', 'Server closed')
         listen_sock.close()
         stop = True
+        close_file()
         sys.exit()
