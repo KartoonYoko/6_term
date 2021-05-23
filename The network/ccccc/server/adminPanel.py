@@ -1,18 +1,13 @@
-#!/usr/bin/env python
-# --*-- coding: utf-8 --*--
-
 from fileFunctions import *
-import os
 import sys
-import stat
-from groupList import *
-from usersList import *
+from database import *
+from log_func import *
 
 # TODO Возможности админа
 #   - изменять мод у файлов
 #   - создавать группы пользователей
 #   - объеденять в группы пользователей
-#   - смотреть лог сервера
+#   - смотреть лог сервера (в отдельном файлике)
 
 FIRST_DIR = "storage"
 COMMON_GROUP = "common"
@@ -92,33 +87,30 @@ def change_mode(arg):
     if not os.path.exists(filepath):
         print("file doesnt exist")
         return
-    group_list.add_rules_to_file(group, filepath, rules)
-
-
-def get_file_mode(file):
-    CWD = get_path()
-    filepath = os.path.abspath(os.path.join(CWD, file))
-    if not os.path.exists(filepath):
-        print("file doesnt exist")
-    res = group_list.get_file_rules(filepath)   # filemode test.jpg
-    if not res:
-        print(res)
+    ftp_db.set_rules_to_file_for_group(group, filepath, rules)
 
 
 def get_groups(arg):
-    res = group_list.get_list_groups()
+    res = ftp_db.get_list_groups()
     if res:
         print(res)
 
 
 def get_users(arg):
-    print(user_list.get_all_users())
+    print(ftp_db.get_all_users())
 
 
 def set_user_group(arg):
+    """
+    задаст группу пользователю, если группы нет - создаст ее
+    """
     name = arg[0]
     group = arg[1]
-    user_list.set_group(name, group)
+    ftp_db.set_group_to_user(name, group)
+
+
+def get_files(arg):
+    print(ftp_db.get_files_list())
 
 
 def quit(arg):
@@ -127,18 +119,18 @@ def quit(arg):
 
 if __name__ == "__main__":
     commands_list = {
-        "list": [show_directory, "[dirpath] shows info file or catalog and moves to one"],
-        "help": [get_help, "list of commands"],
-        "mode": [change_mode, "[file, group, mode] change file mode (rwx)"],
-        "filemode": [get_file_mode, "[file] get file modes of all groups"],
-        "groups": [get_groups, "get all groups"],
-        "users": [get_users, "get all users"],
-        "usergroup": [set_user_group, "[username , group] set group to user"],
-        "quit": [quit, "close terminal"],
-        "q": [quit, "close terminal"]
+        "LIST": [show_directory, "[dirpath] shows info file or catalog and moves to one"],
+        "HELP": [get_help, "list of commands"],
+        "MODE": [change_mode, "[file, group, mode] change file mode for group (rwx)"],
+        "GROUPS": [get_groups, "get all groups"],
+        "USERS": [get_users, "get all users"],
+        "FILES": [get_files, "get all files"],
+        "USERGROP": [set_user_group, "[username , group] set group to user, "
+                                      "if there is not the group, ones will be made"],
+        "QUIT": [quit, "close terminal"],
+        "Q": [quit, "close terminal"]
     }
-    group_list = GroupList()    # store groups
-    user_list = UsersList()     # users
+    ftp_db = DatabaseFTP(FIRST_DIR, "FTP_server_bd.db")
     path = [FIRST_DIR]          # PATH of current directory
     print("Enter command, to get help enter HELP")
     user_input = ''

@@ -1,46 +1,14 @@
-#!/usr/bin/env python
-# --*-- coding: utf-8 --*--
-
 import socket
 import threading
 import os
 import sys
 import time
-from usersList import *
-from fileFunctions import *
-from groupList import *
+import stat
+from log_func import *
+import log_func
+from database import DatabaseFTP
 
 allow_delete = False
-LOG_FILE_NAME = "log_file.txt"
-LOG_FILE = None
-COMMON_GROUP = "common"
-
-
-def open_file():
-    global LOG_FILE
-    if os.path.exists(LOG_FILE_NAME):
-        LOG_FILE = open(LOG_FILE_NAME, 'a')
-    else:
-        LOG_FILE = open(LOG_FILE_NAME, 'w')
-
-
-def close_file():
-    global LOG_FILE
-    LOG_FILE.close()
-
-
-def log(func, cmd):
-    global LOG_FILE
-    logmsg = time.strftime("%Y-%m-%d %H-%M-%S [-] " + func)
-    print("\033[31m%s\033[0m: \033[32m%s\033[0m" % (logmsg, cmd))
-
-    if LOG_FILE:
-        open_file()
-    try:
-        LOG_FILE.write("[%s]: %s" % (logmsg, cmd) + "\r")
-    except Exception as err:
-        print(err)
-    close_file()
 
 
 class FtpServerProtocol(threading.Thread):
@@ -52,8 +20,13 @@ class FtpServerProtocol(threading.Thread):
         self.cwd           = CWD
         self.commSock      = commSock   # управляющее соединение
         self.address       = address
-        self.list_users    = UsersList()
-        self.list_groups   = GroupList()
+        self.database      = DatabaseFTP("storage", "FTP_server_bd.db")
+
+        self.user_group = 'common'
+        self.is_anonymous = False
+        self.anonymous_group = 'anonymous'
+        self.anonymous_rule = '---'
+        self.default_rule = 'r--'
 
     def run(self):
         """
@@ -82,7 +55,6 @@ class FtpServerProtocol(threading.Thread):
                     'This may include errors such as command line too long.\r\n')
                 log('Receive', err)
 
-    # TODO
     def check_rules(self, filename, mode='r'):
         """
         :param String filename:
@@ -91,7 +63,88 @@ class FtpServerProtocol(threading.Thread):
             r || w || x
         :return:
         """
-        self.list_groups.get_group_file_rules(filename, self.user_group)
+        if self.is_anonymous:
+            if mode == 'r':
+                return self.anonymous_rule[0] == 'r'
+            elif mode == 'w':
+                return self.anonymous_rule[1] == 'w'
+            elif mode == 'x':
+                return self.anonymous_rule[2] == 'x'
+            else:
+                return False
+        filename = os.path.abspath(filename)
+        rule = self.database.get_file_rules(self.user_group, filename)      # WORK WITH DB
+        if mode == 'r':
+            return rule[0] == 'r'
+        elif mode == 'w':
+            return rule[1] == 'w'
+        elif mode == 'x':
+            return rule[2] == 'x'
+        else:
+            return False
+
+    def fileProperty(self, filepath):
+        """
+        :param filepath: путь к каталогу
+        return information from given file, like this "-rw-r--r-- 1 User Group 312 Aug 1 2014 filename"
+        """
+        st = os.stat(filepath)
+        fileMessage = []
+
+        def _getFileMode():
+            modes = [
+                stat.S_IRUSR, stat.S_IWUSR, stat.S_IXUSR
+            ]
+            mode = st.st_mode
+            fullmode = ''
+            fullmode += os.path.isdir(filepath) and 'd' or '-'
+
+            path = filepath
+            # owner
+            for i in range(3):
+                fullmode += bool(mode & modes[i]) and 'rwx'[i] or '-'
+            if fullmode[0] == 'd':
+                fullmode += 'rwxrwx'
+                return fullmode
+            # group
+            group_rule = self.database.get_file_rules(self.user_group, path)
+            if not group_rule:      # if record is absent
+                if self.is_anonymous:
+                    group_rule = self.anonymous_rule
+                else:
+                    group_rule = self.default_rule
+            fullmode += group_rule
+            # other
+            if self.is_anonymous:
+                fullmode += self.anonymous_rule
+            else:
+                not_grouped = self.database.get_file_rules('common', path)    # for all not grouped users
+                fullmode += not_grouped
+            return fullmode
+
+        def _getFilesNumber():
+            return str(st.st_nlink)
+
+        def _getUser():
+            return str(st.st_uid)
+
+        def _getGroup():
+            if self.is_anonymous:
+                return '0'
+            return str(self.database.get_group_id(self.user_group))
+
+        def _getSize():
+            return str(st.st_size)
+
+        def _getLastTime():
+            return time.strftime('%b %d %H:%M', time.gmtime(st.st_mtime))
+
+        for func in (
+        '_getFileMode()', '_getFilesNumber()', '_getUser()', '_getGroup()', '_getSize()', '_getLastTime()'):
+            fileMessage.append(eval(func))
+        fileMessage.append(os.path.basename(filepath))
+
+        return ' '.join(fileMessage)
 
     # ---------------------------------------#
     #  Создание tcp туннеля передачи данных  #
@@ -162,9 +215,17 @@ class FtpServerProtocol(threading.Thread):
             self.sendCommand('230 User logged in, proceed.\r\n')
             self.passwd = passwd
             self.authenticated = True
-            if not self.list_users.get_user(self.username):
-                self.list_users.add_user(self.username, self.passwd)
-            self.user_group = self.list_groups.get_group(self.username)
+
+            # registration of user in db
+            # WORK WITH DB
+            if (self.username == 'anonymous') and (self.username == 'anonymous'):
+                self.is_anonymous = True
+            if not self.is_anonymous:
+                if not self.database.get_user(self.username):
+                    self.database.set_user(self.username, self.passwd)
+                self.user_group = self.database.get_group_of_user(self.username)
+            else:
+                self.user_group = self.anonymous_group
 
     def TYPE(self, type):
         """
@@ -235,12 +296,12 @@ class FtpServerProtocol(threading.Thread):
             self.sendCommand('150 Here is listing.\r\n')
             self.startDataSock()
             if not os.path.isdir(pathname):
-                fileMessage = fileProperty(pathname)
+                fileMessage = self.fileProperty(pathname)
                 self.dataSock.sock(fileMessage+'\r\n')
 
             else:
                 for file in os.listdir(pathname):
-                    fileMessage = fileProperty(os.path.join(pathname, file))
+                    fileMessage = self.fileProperty(os.path.join(pathname, file))
                     self.sendData(fileMessage+'\r\n')
             self.stopDataSock()
             self.sendCommand('226 List done.\r\n')
@@ -363,6 +424,9 @@ class FtpServerProtocol(threading.Thread):
         Передать файл с сервера на клиент
         :param filename:
         """
+        if not self.check_rules(filename, 'r'):
+            self.sendCommand('550 You have not enough rules to read file.\r\n')     # WORK WITH DB
+            return
         # pathname = os.path.join(self.cwd, filename)
         pathname = os.path.join(filename)
         log('RETR', pathname)
@@ -542,7 +606,7 @@ def server_listener():
 if __name__ == "__main__":
     # create log file
     open_file()
-    LOG_FILE.write("\r\n")
+    log_func.LOG_FILE.write("\r\n")
 
     try:
         HOST = socket.gethostbyname(socket.gethostname())
