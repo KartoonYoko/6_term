@@ -1,8 +1,6 @@
-import matplotlib.pyplot as plt
-import math
-import numpy as np
 from sympy import *
 from sympy.solvers.solveset import linsolve
+import matplotlib.pyplot as plt
 # variant 17
 # x = 1.5 y = 0.43
 
@@ -17,7 +15,6 @@ y = [-2.11, -2.33, -0.14, 0.43, 1.34, 2.65, 6.23, 9.23, 7.65, 4.23]
 # S(5.1) = a80 + a81 * 5.1 + a82 * x^2 = y(5.1) = 4.23
 
 # -2.11 - 0.5 * a11 +  0.5^2 * a12 = -2.33
-# https://overcoder.net/q/668685/%D0%BA%D0%B0%D0%BA-%D1%80%D0%B5%D1%88%D0%B8%D1%82%D1%8C-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%83-%D0%BB%D0%B8%D0%BD%D0%B5%D0%B9%D0%BD%D1%8B%D1%85-%D1%83%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B2-sympy
 
 
 # Структура, описывающая сплайн на каждом сегменте сетки
@@ -67,11 +64,12 @@ def BuildSpline(x, y, n):
 
     # добавим доп функции из условий равенства для единственного решения
     if amount % 2 == 0:
-        amount_of_equalls = int(amount / 2)
+        amount_of_equalls = int(amount)
     else:
-        amount_of_equalls = int(amount - 1) / 2
+        amount_of_equalls = int(amount - 1)
     x_iterrator = 1
-    for i in range(amount_of_equalls):
+    i = 0
+    while i < amount_of_equalls - 2:
         sp_tp1 = SplineTuple("none", "none", "none", "none", "none")
         sp_tp1.a = "a" + str(i + 1) + "0"
         sp_tp1.b = "a" + str(i + 1) + "1"
@@ -82,32 +80,11 @@ def BuildSpline(x, y, n):
         sp_tp2.b = "a" + str(i + 2) + "1"
         sp_tp2.c = "a" + str(i + 2) + "2"
         sp_tp2.x = x[x_iterrator]
-        sp_tp1.y = sp_tp2.a + " * " + str(sp_tp2.x) + "+" + sp_tp2.b + " * " + str(sp_tp2.x) + \
-                   " + " + sp_tp2.c + " * " + str(sp_tp2.x)
-        x_iterrator += 1
+        sp_tp1.y = "(" + sp_tp2.a + " * " + str(sp_tp2.x) + " + " + sp_tp2.b + " * " + str(sp_tp2.x) + \
+                    " + " + sp_tp2.c + " * " + str(sp_tp2.x) + ")"
         sp_lin.append(sp_tp1.get_spline())
-
-    # добавим доп функции из условий равенства с первой производной для единственного решения
-    # if amount % 2 == 0:
-    #     amount_of_equalls = int(amount / 2)
-    # else:
-    #     amount_of_equalls = int(amount - 1) / 2
-    # x_iterrator = 1
-    # for i in range(amount_of_equalls):
-    #     sp_tp1 = SplineTuple("none", "none", "none", "none", "none")
-    #     sp_tp1.a = "0"
-    #     sp_tp1.b = "a" + str(i + 1) + "1"
-    #     sp_tp1.c = "" + "2 * " + "a" + str(i + 1) + "2"
-    #     sp_tp1.x = x[x_iterrator]
-    #     sp_tp2 = SplineTuple("none", "none", "none", "none", "none")
-    #     sp_tp1.a = "0"
-    #     sp_tp1.b = "a" + str(i + 2) + "1"
-    #     sp_tp1.c = "" + "2 * " + "a" + str(i + 2) + "2"
-    #     sp_tp1.x = x[x_iterrator]
-    #     sp_tp1.y = sp_tp2.a + " * " + str(sp_tp2.x) + "+" + sp_tp2.b + " * " + str(sp_tp2.x) + \
-    #                " + " + sp_tp2.c + " * " + str(sp_tp2.x)
-    #     x_iterrator += 1
-    #     sp_lin.append(sp_tp1.get_spline())
+        x_iterrator += 1
+        i += 1
 
     # заполним массивы для решения СЛАУ
     sp_symbols = ''
@@ -117,16 +94,77 @@ def BuildSpline(x, y, n):
     arr = symbols(sp_symbols)
     for key in splines:
         key.print_spline()
+    arr_variables = sp_symbols.split(', ')[:-1]
+    arr_another = []    # список с свободными членами
+    res = linsolve(sp_lin, (arr))
+    for arr_buf in res:
+        for key in arr_buf:
+            for i in arr_variables:
+                if i in str(key):
+                    if i not in arr_another:
+                        arr_another.append(i)
+    print(arr_another)
+
+    # добавим доп функции из условий равенства с первой производной для единственного решения
+    if amount % 2 == 0:
+        amount_of_equalls = int(amount)
+    else:
+        amount_of_equalls = int(amount - 1)
+    x_iterrator = 1
+    i = 0
+    while i < amount_of_equalls:
+        sp_tp1 = SplineTuple("none", "none", "none", "none", "none")
+        sp_tp1.a = "0"
+        b1 = "a" + str(i + 1) + "1"
+        sp_tp1.b = b1
+        c1 = "a" + str(i + 1) + "2"
+        sp_tp1.c = "" + "2 * " + c1
+        sp_tp1.x = x[x_iterrator]
+        sp_tp2 = SplineTuple("none", "none", "none", "none", "none")
+        sp_tp2.a = "0"
+        b2 = "a" + str(i + 2) + "1"
+        sp_tp2.b = b2
+        c2 = "a" + str(i + 2) + "2"
+        sp_tp2.c = "" + "2 * " + c2
+        sp_tp2.x = x[x_iterrator]
+        sp_tp1.y = "(" + sp_tp2.a + " * " + str(sp_tp2.x) + "+" + sp_tp2.b + \
+                    " + " + sp_tp2.c + " * 2 * " + str(sp_tp2.x) + ")"
+        if (b1 in arr_another) or (c1 in arr_another) or (b2 in arr_another) or (c2 in arr_another):
+            sp_lin.append((b1 + " + " + c1 + " * 2 * %s" + " - " + sp_tp1.y) % x[x_iterrator])
+            # sp_lin.append(sp_tp1.get_spline())
+            # print((b1 + " + " + c1 + " * 2 * %s" + " - " + sp_tp1.y) % x[x_iterrator])
+            # print(sp_tp1.get_spline())
+            # print()
+
+        x_iterrator += 1
+        i += 1
 
     return linsolve(sp_lin, (arr))
 
 
-x = [0, 0.25, 0.5, 0.75, 1]
-y = [2, 3, 5, 4, 6]
 ans = BuildSpline(x, y, len(x))
 
 print()
 j = 0
+res = []
+count = 1
 for key in ans:
+    buf = []
     for i in key:
-        print(i)
+        if count % 3 == 0:
+            buf.append(i)
+            res.append(buf)
+            buf = []
+        else:
+            buf.append(i)
+        count += 1
+y_splines = []
+
+for i in range(len(res)):
+    buf = res[i][0] + res[i][1] * x[i] + res[i][2] * x[i] ** 2
+    y_splines.append(buf)
+
+plt.plot(x[:-1], y_splines, '-')
+plt.grid(True)
+plt.show()
+
