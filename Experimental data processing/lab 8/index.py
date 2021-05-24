@@ -65,6 +65,50 @@ def BuildSpline(x, y, n):
 
             sp_lin.append(splines[i * 2 + j].get_spline())
 
+    # добавим доп функции из условий равенства для единственного решения
+    if amount % 2 == 0:
+        amount_of_equalls = int(amount / 2)
+    else:
+        amount_of_equalls = int(amount - 1) / 2
+    x_iterrator = 1
+    for i in range(amount_of_equalls):
+        sp_tp1 = SplineTuple("none", "none", "none", "none", "none")
+        sp_tp1.a = "a" + str(i + 1) + "0"
+        sp_tp1.b = "a" + str(i + 1) + "1"
+        sp_tp1.c = "a" + str(i + 1) + "2"
+        sp_tp1.x = x[x_iterrator]
+        sp_tp2 = SplineTuple("none", "none", "none", "none", "none")
+        sp_tp2.a = "a" + str(i + 2) + "0"
+        sp_tp2.b = "a" + str(i + 2) + "1"
+        sp_tp2.c = "a" + str(i + 2) + "2"
+        sp_tp2.x = x[x_iterrator]
+        sp_tp1.y = sp_tp2.a + " * " + str(sp_tp2.x) + "+" + sp_tp2.b + " * " + str(sp_tp2.x) + \
+                   " + " + sp_tp2.c + " * " + str(sp_tp2.x)
+        x_iterrator += 1
+        sp_lin.append(sp_tp1.get_spline())
+
+    # добавим доп функции из условий равенства с первой производной для единственного решения
+    # if amount % 2 == 0:
+    #     amount_of_equalls = int(amount / 2)
+    # else:
+    #     amount_of_equalls = int(amount - 1) / 2
+    # x_iterrator = 1
+    # for i in range(amount_of_equalls):
+    #     sp_tp1 = SplineTuple("none", "none", "none", "none", "none")
+    #     sp_tp1.a = "0"
+    #     sp_tp1.b = "a" + str(i + 1) + "1"
+    #     sp_tp1.c = "" + "2 * " + "a" + str(i + 1) + "2"
+    #     sp_tp1.x = x[x_iterrator]
+    #     sp_tp2 = SplineTuple("none", "none", "none", "none", "none")
+    #     sp_tp1.a = "0"
+    #     sp_tp1.b = "a" + str(i + 2) + "1"
+    #     sp_tp1.c = "" + "2 * " + "a" + str(i + 2) + "2"
+    #     sp_tp1.x = x[x_iterrator]
+    #     sp_tp1.y = sp_tp2.a + " * " + str(sp_tp2.x) + "+" + sp_tp2.b + " * " + str(sp_tp2.x) + \
+    #                " + " + sp_tp2.c + " * " + str(sp_tp2.x)
+    #     x_iterrator += 1
+    #     sp_lin.append(sp_tp1.get_spline())
+
     # заполним массивы для решения СЛАУ
     sp_symbols = ''
     for i in range(amount):
@@ -73,6 +117,7 @@ def BuildSpline(x, y, n):
     arr = symbols(sp_symbols)
     for key in splines:
         key.print_spline()
+
     return linsolve(sp_lin, (arr))
 
 
