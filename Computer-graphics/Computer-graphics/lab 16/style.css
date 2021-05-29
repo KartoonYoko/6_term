@@ -14,23 +14,3 @@ body{
     image-rendering: pixelated;
     image-rendering: optimizespeed;
 }
-.canvas1{
-    display: none;
-}
-.canvas2{
-    display: none;
-}
-.btn{
-    margin-top: 20px;
-    width: 200px;
-}
-
-#photo1{
-    display: none;
-    visibility: hidden;
-}
-
-#photo2{
-    display: none;
-    visibility: hidden;
-}

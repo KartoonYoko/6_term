@@ -89,6 +89,9 @@ class Normal3D{
 
 class Poly{
 
+    /**
+     * arguments - 3d points
+     */
     constructor(){
         let points = [];
         for(let i = 0; i < arguments.length; i++){
@@ -102,6 +105,9 @@ class Poly{
         let v2 = new Point3D(points[0].x - points[1].x, points[0].y - points[1].y, points[0].z - points[1].z);
 
         let normalP3D = new Point3D(v1.y*v2.z-v2.y*v1.z, v1.z*v2.x-v2.z*v1.x, v1.x*v2.y-v2.x*v1.y);
+        if (points.length > 3){
+            normalP3D = new Point3D(v1.y*v2.z-v2.y*v1.z, v1.z*v2.x-v2.z*v1.x, -1 * (v1.x*v2.y-v2.x*v1.y));
+        }
         let normalLen = Math.sqrt(normalP3D.x*normalP3D.x + normalP3D.y*normalP3D.y + normalP3D.z*normalP3D.z);
 
         this.normal = new Normal3D(normalP3D, normalLen);
@@ -174,34 +180,38 @@ class Cube{
     constructor(ctx, size, fillColor, edgeColor){
         this.ctx = ctx;
 
-        let p000 = new Point3D(0,0,0);
-        let p0S0 = new Point3D(0,size,0);
-        let pSS0 = new Point3D(size,size,0);
-        let pS00 = new Point3D(size,0,0);
-
-        let p00S = new Point3D(0,0,size);
-        let p0SS = new Point3D(0,size,size);
-        let pSSS = new Point3D(size,size,size);
-        let pS0S = new Point3D(size,0,size);
-
+        let N = 6;
+        let points = [];
+        let R = size;
+        for (let i = 0; i < N; i++){
+            let angle = 2* Math.PI*i/N;
+            let x = R * Math.cos(angle);
+            let y = R * Math.sin(angle);
+            let z = 10;
+            let point = new Point3D(x, y, z);
+            points.push(point);
+        }
+        
         let polys = [];
-        polys.push(new Poly(p000,p0S0,pSS0,pS00));
-        polys.push(new Poly(pS00,pSS0,pSSS,pS0S));
-        polys.push(new Poly(pS0S,pSSS,p0SS,p00S));
-        polys.push(new Poly(p00S,p0SS,p0S0,p000));
-        polys.push(new Poly(p0S0,p0SS,pSSS,pSS0));
-        polys.push(new Poly(p00S,p000,pS00,pS0S));
+        polys.push(new Poly(...points));
+        let point3 = new Point3D(0, 0, 2 * size);
+        for (let i = 0; i < N; i++){
+            let point1, point2;
+            if (i == N - 1){
+                point1 = points[i]
+                point2 = points[0]
+            }
+            else{
+                point1 = points[i]
+                point2 = points[i + 1]
+            }
+            let poly = new Poly(point1, point2, point3);
+            polys.push(poly);
+        }
+        points.push(point3);
+
         this.polys = polys;
 
-        let points = [];
-        points.push(p000);
-        points.push(p0S0);
-        points.push(pSS0);
-        points.push(pS00);
-        points.push(p00S);
-        points.push(p0SS);
-        points.push(pSSS);
-        points.push(pS0S);
         for(let i = 0; i < polys.length; i++)
         {
             points.push(polys[i].normal.point);
@@ -210,6 +220,7 @@ class Cube{
 
         this.fillColor = fillColor;
         this.edgeColor = edgeColor;
+        this.getColor(this.fillColor);
     }
 
     move(p3D){
@@ -224,7 +235,9 @@ class Cube{
         for(let i = 0; i < this.polys.length; i++)
         {
             let poly = this.polys[i];
-            poly.put(this.ctx, center, this.fillColor, this.edgeColor);
+            let color = this.getColor('rgb(10, 10, 10, 1)');
+            let fillColor = this.setColor(color[0] * 2 * i + 10, color[1] * 2 * i + 40, color[2] * 2 * i + 60);
+            poly.put(this.ctx, center, fillColor, this.edgeColor);
         }
     }
 
@@ -234,5 +247,26 @@ class Cube{
             let point = this.points[i];
             point.rotate(axis, angle);
         }
+    }
+
+    getColor(str){
+        // 'rgb(0, 0, 139, 1)'
+        let bracket = str.indexOf('(', 0);
+        let first = str.indexOf(',', 0);
+        let second = str.indexOf(',', first + 1);
+        let third = str.indexOf(',', second + 1);
+
+        let r = parseInt(str.slice(bracket + 1, first));
+        let g = parseInt(str.slice(first + 1, second));
+        let b = parseInt(str.slice(second + 1, third));
+
+        return [r, g, b]
+    }
+
+    setColor(r, g, b){
+        if (r > 255) r = 255;
+        if (g > 255) g = 255;
+        if (b > 255) b = 255;
+        return 'rgb(' + r + ', ' + g + ', ' +b + ', 1)'
     }
 }
