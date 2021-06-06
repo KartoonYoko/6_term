@@ -7,7 +7,6 @@
  */
 
 
-
 /**
  * Закрасить пиксель
  * 
@@ -16,7 +15,6 @@
  */
 function setPixel(ctx, x, y, color){
     let c = "rgb(" + color[0] + ", " + color[1] + ", " + color[2] + ")";
-    // console.log(c);
     ctx.fillStyle = c;
     ctx.fillRect( x, y, 1, 1 );
 }
@@ -87,9 +85,97 @@ function getShadeInfo(bitmap){
     return [r, g, b];
 }
 
+ /* Функция для получения текущих координат курсора мыши */
+ function getXY(obj_event) {
+    let x, y;
+    if (obj_event) {
+        x = obj_event.clientX;
+        y = obj_event.clientY;
+    }
+    return new Array(x, y);
+}
 
-const CANVAS_WIDTH = 1500;
-const CANVAS_HEIGHT = 800;
+/* Функция для измерения ширины окна */
+function clientWidth() {
+    return document.documentElement.clientWidth == 0 ? document.body.clientWidth : document.documentElement.clientWidth;
+}
+/* Функция для измерения высоты окна */
+function clientHeight() {
+    return document.documentElement.clientHeight == 0 ? document.body.clientHeight : document.documentElement.clientHeight;
+}
+/* При отпускании кнопки мыши отключаем обработку движения курсора мыши */
+function clearXY(evt) {
+    document.onmousemove = null;
+}
+
+function saveWH(obj_event) {
+    let target = obj_event.target.parentElement;
+
+    if (target.classList.contains('block')){
+        /* Ставим обработку движения мыши для разных браузеров */
+        document.onmousemove = resizeBlock.bind(target);
+        return false; // Отключаем стандартную обработку нажатия мыши
+    }
+}
+
+function resizeBlock(obj_event) {
+    let point = getXY(obj_event);
+    let block = this;
+
+    // let body = document.querySelector(".blocks");
+    let arr = block.getBoundingClientRect();
+    // console.log(arr.bottom - point[1]);
+    let del = arr.y - point[1];
+    console.log(del);
+    block.style.height = del + "px"; // Устанавливаем новую высоту блока
+
+    /* Если блок выходит за пределы экрана, то устанавливаем максимальные значения для ширины и высоты */
+    if (block.offsetLeft + block.clientWidth > clientWidth()) block.style.width = (clientWidth() - block.offsetLeft)  + "px";
+    if (block.offsetTop + block.clientHeight > clientHeight()) block.style.height = (clientHeight() - block.offsetTop) + "px";
+}
+
+document.onmouseover = function(event) {
+    let target = event.target;
+
+    // если у нас есть подсказка...
+    let tooltipHtml = target.dataset.tooltip;
+    if (!tooltipHtml) return;
+
+    // ...создадим элемент для подсказки
+
+    tooltipElem = document.createElement('div');
+    tooltipElem.className = 'tooltip';
+    tooltipElem.innerHTML = tooltipHtml;
+    document.body.append(tooltipElem);
+
+    // спозиционируем его сверху от аннотируемого элемента (top-center)
+    let coords = target.getBoundingClientRect();
+    
+    let left = coords.left + (target.offsetWidth - tooltipElem.offsetWidth) / 2;
+    if (left < 0) left = 0; // не заезжать за левый край окна
+
+    let top = coords.top - tooltipElem.offsetHeight - 5;
+    if (top < 0) { // если подсказка не помещается сверху, то отображать её снизу
+        top = coords.top + target.offsetHeight + 5;
+    }
+    
+    tooltipElem.style.left = left + 'px';
+    tooltipElem.style.top = top + 'px';
+};
+
+document.onmouseout = function(e) {
+
+    if (tooltipElem) {
+        tooltipElem.remove();
+        tooltipElem = null;
+    }
+
+};
+
+let tooltipElem;
+
+const CANVAS_WIDTH = 1920;
+const CANVAS_HEIGHT = 1080;
 
 const canvas = document.querySelector('.canvas');
 canvas.width = CANVAS_WIDTH;
@@ -99,188 +185,46 @@ let bitmap1 = [];
 
 let img1 = document.getElementById("photo1");
 
-let isImgloaded = false;
 img1.onload = function(){
-    let x = -400;
-    let y = -400;
+
+    let x = 0;
+    let y = 0;
 	ctx.drawImage(img1, x, y);
 
     // размер битмапа [n x n]
-    let n = 100;
+    let n = 100; //CANVAS_HEIGHT;
     let xBitmap = 0;
     let yBitmap = 0;
     bitmap1 = getBitmap(ctx, xBitmap, yBitmap, n, n);
     let info = getShadeInfo(bitmap1);
 
-    // посчитаем необходимые данные для отображения "относительных" гистограмм в %
-    let sumOfPixels = n * n;
-    let shadesInProcR = info[0].map(v => {
-        return (v / sumOfPixels * 100).toFixed(3);
-    });
-    let shadesInProcG = info[1].map(v => {
-        return (v / sumOfPixels * 100).toFixed(3);
-    });
-    let shadesInProcB = info[2].map(v => {
-        return (v / sumOfPixels * 100).toFixed(3);
-    });
     // посчитаем данные для общих гистограмм
     let aver = [];
     for (let i = 0; i < 256; i++){
         let buf = Math.round((info[0][i] + info[1][i] + info[2][i]) / 3);
         aver.push(buf);
     }
-    let averInProc = aver.map(v => {
-        return (v / sumOfPixels * 100).toFixed(3);
-    });
-    // зададим подписи и цвет столбцов
-    let labels = [];
-    let backColor = [];
+
+    // создадим график
+    let color = 1; // r - 0 g - 1 b - 2
+    let blocks = document.querySelector(".blocks");
+    const kefBlock = 4;
     for (let i = 0; i < 256; i++){
-        labels.push(i);
-        let str = "rgba(" + i +", 0, 0, 0.6)";
-        backColor.push(str);
+        let block = document.createElement('div');
+        block.classList.add('block');
+        let tip = "количество: " + info[color][i] + "<br>оттенок " + i;
+        block.setAttribute("data-tooltip", tip);
+        block.style.height = info[color][i] / kefBlock + 'px';
+
+        let blockResize = document.createElement('div');
+        blockResize.classList.add('block_resize');
+        document.onmouseup = clearXY; // Ставим обработку на отпускание кнопки мыши
+        document.onmousedown = saveWH; // Ставим обработку на нажатие кнопки мыши
+
+        block.append(blockResize);
+        blocks.append(block);
     }
 
-    // график оттенков красного ------------------------------------------
-    var shadesOfR = document.getElementById("shadesOfR").getContext("2d");
-    var densityData = {
-        label: 'Shades of red',
-        data: info[0],
-        backgroundColor: backColor,
-    };
-       
-    var barChart = new Chart(shadesOfR, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
-    // график оттенков красного в %
-    let shadesOfRInProc = document.getElementById("shadesOfRInProc").getContext("2d");
-    var densityData = {
-        label: 'Shades of red %',
-        data: shadesInProcR,
-        backgroundColor: backColor,
-    };
-    var barChart = new Chart(shadesOfRInProc, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
-    // график оттенков зеленого ------------------------------------------
-    backColor = [];
-    for (let i = 0; i < 256; i++){
-        let str = "rgba(0, " + i + ", 0, 0.6)";
-        backColor.push(str);
-    }
-    var shadesOfG = document.getElementById("shadesOfG").getContext("2d");
-    var densityData = {
-        label: 'Shades of green',
-        data: info[1],
-        backgroundColor: backColor,
-    };
-       
-    var barChart = new Chart(shadesOfG, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
-    // график оттенков зеленого в %
-    let shadesOfGInPro = document.getElementById("shadesOfGInPro").getContext("2d");
-    var densityData = {
-        label: 'Shades of green %',
-        data: shadesInProcG,
-        backgroundColor: backColor,
-    };
-    var barChart = new Chart(shadesOfGInPro, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
-    // график оттенков синего ------------------------------------------
-    backColor = [];
-    for (let i = 0; i < 256; i++){
-        let str = "rgba(0, 0, " + i + ", 0.6)";
-        backColor.push(str);
-    }
-    var shadesOfB = document.getElementById("shadesOfB").getContext("2d");
-    var densityData = {
-        label: 'Shades of blue',
-        data: info[2],
-        backgroundColor: backColor,
-    };
-       
-    var barChart = new Chart(shadesOfB, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
-    // график оттенков синего в %
-    let shadesOfBInPro = document.getElementById("shadesOfBInPro").getContext("2d");
-    var densityData = {
-        label: 'Shades of blue %',
-        data: shadesInProcB,
-        backgroundColor: backColor,
-    };
-    var barChart = new Chart(shadesOfBInPro, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
-
-    // график всех оттенков ------------------------------------------
-    backColor = [];
-    let borderColor = [];
-    for (let i = 0; i < 256; i++){
-        let str = "rgba(" + i +"," + i + ", " + i + ", 0.6)";
-        backColor.push(str);
-        borderColor.push("rgba(0, 0, 0, 1)");
-    }
-    var shadesOfAll = document.getElementById("shadesOfAll").getContext("2d");
-    var densityData = {
-        label: 'Shades of all shades',
-        data: aver,
-        backgroundColor: backColor,
-        borderColor: borderColor,
-        borderWidth: 1,
-        hoverBorderWidth: 0
-    };
-       
-    var barChart = new Chart(shadesOfAll, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
-    // график всех оттенков в %
-    let shadesOfAllInProc = document.getElementById("shadesOfAllInProc").getContext("2d");
-    var densityData = {
-        label: 'Shades of all shades %',
-        data: averInProc,
-        backgroundColor: backColor,
-        borderColor: borderColor,
-        borderWidth: 1,
-        hoverBorderWidth: 0
-    };
-    var barChart = new Chart(shadesOfAllInProc, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [densityData]
-        }
-    });
 }
 
 

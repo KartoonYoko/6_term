@@ -43,3 +43,18 @@ C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-g
 C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\laba_19\laba_19\obj\Debug\netcoreapp3.1\laba_19.dll
 C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\laba_19\laba_19\obj\Debug\netcoreapp3.1\laba_19.pdb
 C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\laba_19\laba_19\obj\Debug\netcoreapp3.1\laba_19.genruntimeconfig.cache
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\bin\Debug\netcoreapp3.1\laba_19.exe
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\bin\Debug\netcoreapp3.1\laba_19.deps.json
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\bin\Debug\netcoreapp3.1\laba_19.runtimeconfig.json
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\bin\Debug\netcoreapp3.1\laba_19.runtimeconfig.dev.json
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\bin\Debug\netcoreapp3.1\laba_19.dll
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\bin\Debug\netcoreapp3.1\laba_19.pdb
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.csprojAssemblyReference.cache
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.Form1.resources
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.csproj.GenerateResource.cache
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.AssemblyInfoInputs.cache
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.AssemblyInfo.cs
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.csproj.CoreCompileInputs.cache
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.dll
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.pdb
+C:\Users\crash\OneDrive\Рабочий стол\Домашка\6_term\Computer-graphics\Computer-graphics\lab 19\laba_19\obj\Debug\netcoreapp3.1\laba_19.genruntimeconfig.cache

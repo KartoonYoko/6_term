@@ -1,0 +1,15 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "file:///C:/Users/crash/OneDrive/%D0%A0%D0%B0%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%81%D1%82%D0%BE%D0%BB/%D0%94%D0%BE%D0%BC%D0%B0%D1%88%D0%BA%D0%B0/6_term/Computer-graphics/Computer-graphics/lab%2014/index.html",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

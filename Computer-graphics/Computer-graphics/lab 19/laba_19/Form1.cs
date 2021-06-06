@@ -21,6 +21,8 @@ namespace laba_19
         private Random rnd = new Random(DateTime.Now.Millisecond);
         private int viWidth = 320;
         private int viHeight = 180;
+        //private int viWidth = 100;
+        //private int viHeight = 180;
         public Form1()
         {
             InitializeComponent();
@@ -69,23 +71,38 @@ namespace laba_19
                 Byte* i = null;
                 int j = 0;
                 //Заполняем нижнюю линию точками, со случайно выбранными цветами
-                for (int x = 0; x < viWidth; x++)
+                //for (int x = 0; x < viWidth; x++)
+                //{
+                //    *(pointbottom + x) = (Byte)rnd.Next(0, 255);
+                //}
+                for (int x = viWidth / 3; x < viWidth - viWidth / 3; x++)
                 {
-                    *(pointbottom + x) = (Byte)rnd.Next(0, 255);
+                    *(pointbottom + x) = (Byte)rnd.Next(100, 255);
                 }
-                //Заполняем остальные точки, значениями усредненными по алгоритму
                 for (i = pointtop; i < pointbottom; i++)
                 {
-                    if (i != pointtop)
+                    if (i > pointtop + 2 && i < pointbottom - 2)
                     {
-                        //Вес точки снизу увеличен до 3х
-                        j = *(i - 1) + *(i + 1) + *(i + viWidth) * 3;
-                        //Усредняем
-                        j /= 5;
+                        j = *(i - 1) + *(i - 2) + *(i + 1) + *(i + 2) +
+                                 *(i + viWidth) * 5;
+                        j /= 9;
                         if (j < 0) j = 0;
                         *i = (Byte)j;
                     }
                 }
+                //Заполняем остальные точки, значениями усредненными по алгоритму
+                //for (i = pointtop; i < pointbottom; i++)
+                //{
+                //    if (i != pointtop)
+                //    {
+                //        //Вес точки снизу увеличен до 3х
+                //        j = *(i - 1) + *(i + 1) + *(i + viWidth) * 3;
+                //        //Усредняем
+                //        j /= 5;
+                //        if (j < 0) j = 0;
+                //        *i = (Byte)j;
+                //    }
+                //}
             
             //Разблокируем память
             workBmp.UnlockBits(bmpLook);
