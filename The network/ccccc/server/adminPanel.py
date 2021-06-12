@@ -1,4 +1,4 @@
-from fileFunctions import *
+# from fileFunctions import *
 import sys
 from database import *
 from log_func import *
@@ -119,16 +119,16 @@ def quit(arg):
 
 if __name__ == "__main__":
     commands_list = {
-        "LIST": [show_directory, "[dirpath] shows info file or catalog and moves to one"],
-        "HELP": [get_help, "list of commands"],
-        "MODE": [change_mode, "[file, group, mode] change file mode for group (rwx)"],
-        "GROUPS": [get_groups, "get all groups"],
-        "USERS": [get_users, "get all users"],
-        "FILES": [get_files, "get all files"],
-        "USERGROP": [set_user_group, "[username , group] set group to user, "
+        "list": [show_directory, "[dirpath] shows info file or catalog and moves to one"],
+        "help": [get_help, "list of commands"],
+        "mode": [change_mode, "[file, group, mode] change file mode for group (rwx)"],
+        "groups": [get_groups, "get all groups"],
+        "users": [get_users, "get all users"],
+        "files": [get_files, "get all files"],
+        "usergroup": [set_user_group, "[username , group] set group to user, "
                                       "if there is not the group, ones will be made"],
-        "QUIT": [quit, "close terminal"],
-        "Q": [quit, "close terminal"]
+        "quit": [quit, "close terminal"],
+        "q": [quit, "close terminal"]
     }
     ftp_db = DatabaseFTP(FIRST_DIR, "FTP_server_bd.db")
     path = [FIRST_DIR]          # PATH of current directory
